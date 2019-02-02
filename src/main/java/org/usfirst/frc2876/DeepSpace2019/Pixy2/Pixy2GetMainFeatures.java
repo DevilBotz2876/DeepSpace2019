@@ -62,4 +62,8 @@ public class Pixy2GetMainFeatures {
         
     }
 
+    public void printMainFeatures(){
+        Pixy2.printBytes("getMainFeatures reply:", rawBytes);
+    }
+
 }
