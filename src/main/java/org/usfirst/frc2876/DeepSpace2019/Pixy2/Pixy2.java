@@ -35,8 +35,8 @@ public class Pixy2 {
         Pixy2SetLED sl = new Pixy2SetLED(i2c, r, g, b);
     }
 
-    public void getVectors() {
+    public Pixy2Vector[] getVectors() {
         Pixy2GetMainFeatures mf = new Pixy2GetMainFeatures(i2c);
-        
+        return mf.vectors;
     }
 }

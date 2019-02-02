@@ -6,7 +6,7 @@ public class Pixy2GetMainFeatures {
     byte[] rawBytes;
     Pixy2Request request;
     Pixy2Response response;
-    Pixy2Vector[] vectors;
+    public Pixy2Vector[] vectors;
 
     public static final byte LINE_VECTOR = 1;
     public static final byte VECTOR_LENGTH = 6;

@@ -17,14 +17,16 @@ public class Pixy2Vector {
         m_flags = vector[5];
     }
     void print() {
-        System.out.printf("vector: (%d %d) (%d %d) index: %d flags %d", m_x0, m_y0, m_x1, m_y1, m_index, m_flags);
-        System.out.println();
+        System.out.println(toString());
+    }
+    public String toString(){
+        return String.format("vector: (%d %d) (%d %d) index: %d flags %d", m_x0, m_y0, m_x1, m_y1, m_index, m_flags);
     }
 
-    int m_x0;
-    int m_y0;
-    int m_x1;
-    int m_y1;
-    int m_index;
-    int m_flags;
+    public int m_x0;
+    public int m_y0;
+    public int m_x1;
+    public int m_y1;
+    public int m_index;
+    public int m_flags;
 }
