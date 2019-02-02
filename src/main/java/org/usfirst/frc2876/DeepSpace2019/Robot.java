@@ -11,6 +11,9 @@
 
 package org.usfirst.frc2876.DeepSpace2019;
 
+import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2I2C;
+import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -104,6 +107,11 @@ public class Robot extends TimedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+
+        Pixy2 pixy = new Pixy2("line", 0x54);
+        pixy.version();
+        pixy.setLed();
+        pixy.getVectors();
     }
 
     /**
