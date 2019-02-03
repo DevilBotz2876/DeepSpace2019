@@ -23,6 +23,9 @@ public class TestPixy extends Command {
   protected void initialize() {
     Pixy2Vector[] vectors;
     vectors = Robot.pixyHatch.getVectors();
+    if (vectors == null) {
+      return;
+    }
     pixyTurn(vectors[0]);
   }
 
@@ -34,7 +37,7 @@ public class TestPixy extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true
@@ -59,7 +62,7 @@ public class TestPixy extends Command {
         //turn robot clockwise
     }else if(v.m_x1 < v.m_x0){
         //turn robot counterclockwise
-        deg = deg * -1;
+        deg = deg * -1.0;
     }
     System.out.println("degree of change: " + deg);
   }

@@ -9,12 +9,12 @@ public class Pixy2Vector {
     // - Make everything public, don't make get/set methods.
     // - use int instead of uint8_t type
     public Pixy2Vector(byte[] vector) {
-        m_x0 = vector[0];
-        m_y0 = vector[1];
-        m_x1 = vector[2];
-        m_y1 = vector[3];
-        m_index = vector[4];
-        m_flags = vector[5];
+        m_x0 = vector[0] & 0xFF;
+        m_y0 = vector[1] & 0xFF;
+        m_x1 = vector[2] & 0xFF;
+        m_y1 = vector[3] & 0xFF;
+        m_index = vector[4] & 0xFF;
+        m_flags = vector[5] & 0xFF;
     }
     void print() {
         System.out.println(toString());
