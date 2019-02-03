@@ -13,11 +13,6 @@ public class Pixy2I2C {
         name = "Pixy_" + id;
     }
 
-    // This method parses raw data from the pixy into readable integers
-    public int cvt(byte upper, byte lower) {
-        return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);
-    }
-
     public boolean recv(byte[] buf) {
         try {
             return !i2c.readOnly(buf, buf.length);

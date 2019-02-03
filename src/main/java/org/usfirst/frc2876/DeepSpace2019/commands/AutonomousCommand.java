@@ -11,7 +11,6 @@
 
 package org.usfirst.frc2876.DeepSpace2019.commands;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc2876.DeepSpace2019.Robot;
 
 /**
  *

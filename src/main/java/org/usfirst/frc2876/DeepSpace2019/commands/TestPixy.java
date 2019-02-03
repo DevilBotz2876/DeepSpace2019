@@ -8,6 +8,7 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Exception;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Vector;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,7 +23,13 @@ public class TestPixy extends Command {
   @Override
   protected void initialize() {
     Pixy2Vector[] vectors;
-    vectors = Robot.pixyHatch.getVectors();
+    try {
+      vectors = Robot.pixyHatch.getVectors();
+    } catch (Pixy2Exception ex) {
+      System.out.println(ex);
+      ex.printStackTrace();
+      return;
+    }
     if (vectors == null) {
       return;
     }
@@ -51,18 +58,18 @@ public class TestPixy extends Command {
   protected void interrupted() {
   }
 
-  public void pixyTurn(Pixy2Vector v){
-    if(v.m_x0 == v.m_x1){
-        return;
+  public void pixyTurn(Pixy2Vector v) {
+    if (v.m_x0 == v.m_x1) {
+      return;
     }
 
-    double deg = Math.toDegrees(Math.atan((v.m_y1 - v.m_y0)/(v.m_x1 - v.m_x0)));
+    double deg = Math.toDegrees(Math.atan((v.m_y1 - v.m_y0) / (v.m_x1 - v.m_x0)));
 
-    if(v.m_x1 > v.m_x0){
-        //turn robot clockwise
-    }else if(v.m_x1 < v.m_x0){
-        //turn robot counterclockwise
-        deg = deg * -1.0;
+    if (v.m_x1 > v.m_x0) {
+      // turn robot clockwise
+    } else if (v.m_x1 < v.m_x0) {
+      // turn robot counterclockwise
+      deg = deg * -1.0;
     }
     System.out.println("degree of change: " + deg);
   }

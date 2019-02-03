@@ -3,6 +3,7 @@ package org.usfirst.frc2876.DeepSpace2019.Pixy2;
 
 public class Pixy2GetMainFeatures {
 
+    Pixy2I2C i2c;
     byte[] rawBytes;
     Pixy2Request request;
     Pixy2Response response;
@@ -15,28 +16,24 @@ public class Pixy2GetMainFeatures {
     byte responseType = 49;
 
     public Pixy2GetMainFeatures(Pixy2I2C i2c) {
+        this.i2c = i2c;
+        vectors = null;
+    }
+
+    public void get() throws Pixy2Exception {
         //https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:line_api
         //https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:protocol_reference#getmainfeatures-features-wait
         byte[] payload = {0, 1};
         request = new Pixy2Request(requestType, payload);
-        if (i2c.send(request.buf())) {
-            
+        if (i2c.send(request.buf())) {            
             response = new Pixy2Response(i2c);
-            try {
-                rawBytes = response.recv();
-            } catch (Pixy2Exception ex) {
-                System.out.println(ex);
-                ex.printStackTrace();
-                return;
-            }
+            rawBytes = response.recv();
             if (response.m_type != responseType) {
-                // TODO throw pixy exception
+                throw new Pixy2Exception(String.format("Response %02X did match request %02X", response.m_type, responseType));
             }
-            // TODO verify checksum?
             parseResponse();
         }
     }
-
 
     private void parseResponse() {
         // see https://docs.pixycam.com/wiki/doku.php?id=wiki:v2:protocol_reference#getmainfeatures-features-wait

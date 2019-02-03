@@ -11,7 +11,6 @@
 
 package org.usfirst.frc2876.DeepSpace2019;
 
-import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Vector;
 import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveControl;
 import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
