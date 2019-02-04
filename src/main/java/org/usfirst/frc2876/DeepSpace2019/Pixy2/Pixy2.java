@@ -1,5 +1,4 @@
 package org.usfirst.frc2876.DeepSpace2019.Pixy2;
-import java.util.Arrays;
 
 public class Pixy2 {
     Pixy2I2C i2c;
@@ -22,6 +21,15 @@ public class Pixy2 {
         System.out.println();
     }
 
+    public static String bytesToString(byte[] b) {
+        // Each byte takes 2 chars and a space after
+        StringBuffer strbuf = new StringBuffer(b.length*3);
+        for (int i = 0; i < b.length; i++) {
+            strbuf.append(String.format("%02X ", b[i]));            
+        }
+        return strbuf.toString();
+    }
+
 
     public void version() {
         Pixy2Version v = new Pixy2Version(i2c);
@@ -33,10 +41,13 @@ public class Pixy2 {
         byte b=1;
         
         Pixy2SetLED sl = new Pixy2SetLED(i2c, r, g, b);
+        sl.toString();
+        
     }
 
-    public Pixy2Vector[] getVectors() {
+    public Pixy2Vector[] getVectors() throws Pixy2Exception {
         Pixy2GetMainFeatures mf = new Pixy2GetMainFeatures(i2c);
+        mf.get();
         return mf.vectors;
     }
 }

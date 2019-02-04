@@ -29,7 +29,7 @@ public class Pixy2Response {
         }
         short cs = 0;
         for (int i = 0; i < payload.length; i++) {
-            cs += payload[i];
+            cs += payload[i] & 0xFF;
         }
         return cs;
     }
@@ -115,10 +115,11 @@ public class Pixy2Response {
             short csCalc = calcChecksum();
             short csSerial = Pixy2.bytesToShort(buf[3], buf[2]);
             if (csSerial != csCalc) {
-                //throw new Pixy2Exception(String.format("Checksums did not match: calc=%d resp=%d(%02X %02X)",
-                        //csCalc, csSerial, buf[2], buf[3]));
-                System.out.println(String.format("Checksums did not match: calc=%d resp=%d(%02X %02X)",
-                csCalc, csSerial, buf[2], buf[3]));
+                Pixy2.printBytes("checksum error payload", payload);
+                throw new Pixy2Exception(String.format("Checksums did not match: calc=%d resp=%d(%02X %02X)",
+                        csCalc, csSerial, buf[2], buf[3]));
+                // System.out.println(String.format("Checksums did not match: calc=%d resp=%d(%02X %02X)",
+                // csCalc, csSerial, buf[2], buf[3]));
 
                 
             }
