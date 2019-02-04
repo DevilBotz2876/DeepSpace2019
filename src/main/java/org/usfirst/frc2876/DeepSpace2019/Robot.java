@@ -11,7 +11,6 @@
 
 package org.usfirst.frc2876.DeepSpace2019;
 
-import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2I2C;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
 
 import edu.wpi.first.wpilibj.TimedRobot;
