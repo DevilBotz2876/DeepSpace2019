@@ -80,7 +80,7 @@ public class DriveTrain extends Subsystem {
         // configAllSettings:
         // https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/b71916c131f6b381ba26bb5ac46302180088614d/Java/Config%20All/src/main/java/frc/robot/Configs.java#L19
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
-        rightMaster.configAllSettings(allConfigs);
+        // rightMaster.configAllSettings(allConfigs);
 
         // TODO initialize wpilib drive variable probably differential drive;
     }
