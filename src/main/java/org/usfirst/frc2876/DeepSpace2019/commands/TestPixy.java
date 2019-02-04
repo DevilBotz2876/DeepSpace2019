@@ -59,7 +59,7 @@ public class TestPixy extends Command {
         //turn robot clockwise
     }else if(v.m_x1 < v.m_x0){
         //turn robot counterclockwise
-        deg = deg * -1;
+        deg = deg * -1.0;
     }
     System.out.println("degree of change: " + deg);
   }
