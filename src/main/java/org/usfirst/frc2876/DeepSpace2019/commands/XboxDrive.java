@@ -1,0 +1,63 @@
+package org.usfirst.frc2876.DeepSpace2019.commands;
+
+import org.usfirst.frc2876.DeepSpace2019.Robot;
+
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.command.Command;
+
+/**
+ *
+ */
+public class XboxDrive extends Command {
+
+    private boolean velocityMode;
+
+    public XboxDrive() {
+
+        requires(Robot.driveTrain);
+
+    }
+
+    // Called just before this Command runs the first time
+    @Override
+    protected void initialize() {
+        velocityMode = false;
+    }
+
+    // Called repeatedly when this Command is scheduled to run
+    @Override
+    protected void execute() {
+        XboxController xbox = Robot.oi.getXboxController();
+
+        // If you press and hold right bumper robot drives in velocity mode. Release
+        // bumper and switches back to open loop mode.
+        if (xbox.getBumperPressed(Hand.kRight)) {
+            velocityMode = true;
+        } else if (xbox.getBumperReleased(Hand.kRight)) {
+            velocityMode = false;
+        }
+        if (velocityMode) {
+            Robot.driveTrain.velocityTankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
+        } else {
+            Robot.driveTrain.tankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
+        }
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
+    @Override
+    protected boolean isFinished() {
+        return false;
+    }
+
+    // Called once after isFinished returns true
+    @Override
+    protected void end() {
+    }
+
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    @Override
+    protected void interrupted() {
+    }
+}
