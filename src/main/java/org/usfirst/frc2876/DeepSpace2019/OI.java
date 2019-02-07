@@ -1,7 +1,8 @@
 package org.usfirst.frc2876.DeepSpace2019;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
-import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
+import org.usfirst.frc2876.DeepSpace2019.commands.*;
+// import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,6 +47,9 @@ public class OI {
         // SmartDashboard Buttons
         SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
         SmartDashboard.putData("testPixy", new TestPixy());
+        SmartDashboard.putData("Hatch Stop", new HatchStop());
+        SmartDashboard.putData("Hatch Up", new HatchUp());
+        SmartDashboard.putData("Hatch Down", new HatchDown());
     }
 
     public XboxController getXboxController() {

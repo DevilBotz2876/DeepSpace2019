@@ -2,6 +2,10 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -17,8 +21,9 @@ public class Hatch extends Subsystem {
     // digital. Then ask yourself are we getting data or sending data. That will
     // help you figure out what type of class to use as type. Choices are Input or
     // Output, prefixed by Digital or Analog depending where sensor is connected.
-    //
-    // X limit;
+
+
+    DigitalInput limit;
 
     // Use this to limit how fast we print messages to riolog/console.
     int periodicLoopCounter;
@@ -27,7 +32,7 @@ public class Hatch extends Subsystem {
         talonSRX8 = new WPI_TalonSRX(8);
         master = talonSRX8;
         
-        // limit = new X
+        limit = new DigitalInput(0);
 
         periodicLoopCounter = 0;
 
@@ -41,21 +46,32 @@ public class Hatch extends Subsystem {
     @Override
     public void initDefaultCommand() {
         // TODO Set the default command for a subsystem here.
-        // setDefaultCommand(new MySpecialCommand());
+        setDefaultCommand(new HatchStop());
+    }
+    public void hatchUp(){
+    	master.set(0.5);
     }
 
+    public void hatchDown(){
+    	master.set(-0.5);
+    }
+
+    public void hatchStop(){
+    	master.set(0);
+    }
+    
     @Override
     public void periodic() {
         // Put code here to be run every loop
 
         // TODO Call udpate dashboard here
 
-        // if (periodicLoopCounter % 10 == 0) {
-        // System.out.println("hatch limit: " + limit.get());
-        // }
-        // if (periodicLoopCounter % 100 == 0) {
-        // System.out.println("BOOM");
-        // }
+        if (periodicLoopCounter % 10 == 0) {
+        System.out.println("hatch limit: " + limit.get());
+        }
+        if (periodicLoopCounter % 100 == 0) {
+        System.out.println("BOOM");
+        }
         periodicLoopCounter++;
 
     }
