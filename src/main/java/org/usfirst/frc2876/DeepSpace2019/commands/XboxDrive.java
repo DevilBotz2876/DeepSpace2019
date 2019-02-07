@@ -38,9 +38,11 @@ public class XboxDrive extends Command {
             velocityMode = false;
         }
         if (velocityMode) {
-            Robot.driveTrain.velocityTankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
+            // Robot.driveTrain.velocityTankDrive(-xbox.getY(Hand.kLeft), -xbox.getY(Hand.kRight));
+            Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kLeft));
         } else {
-            Robot.driveTrain.tankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
+            //Robot.driveTrain.tankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
+            Robot.driveTrain.arcadeDrive(xbox.getX(Hand.kLeft), -xbox.getY(Hand.kLeft));
         }
     }
 

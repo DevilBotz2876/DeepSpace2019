@@ -2,6 +2,7 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
@@ -63,6 +64,11 @@ public class DriveTrain extends Subsystem {
         leftMaster.setSensorPhase(false);
         rightMaster.setSensorPhase(true);
 
+        leftMaster.setNeutralMode(NeutralMode.Coast);
+        leftFollower.setNeutralMode(NeutralMode.Coast);
+        rightMaster.setNeutralMode(NeutralMode.Coast);
+        rightFollower.setNeutralMode(NeutralMode.Coast);
+
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
 
         differentialDrive.setSafetyEnabled(false);
@@ -74,6 +80,8 @@ public class DriveTrain extends Subsystem {
         // https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/b71916c131f6b381ba26bb5ac46302180088614d/Java/Config%20All/src/main/java/frc/robot/Configs.java#L19
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
         // rightMaster.configAllSettings(allConfigs);
+
+
 
         // TODO initialize navx variable
 
@@ -111,4 +119,27 @@ public class DriveTrain extends Subsystem {
         leftMaster.set(ControlMode.Velocity, leftValue*MAX_RPM);
         rightMaster.set(ControlMode.Velocity, rightValue*MAX_RPM);
     }
+
+    public void setVelocityArcadeJoysticks(double speed, double rotate) {
+
+                //speed = adjustSpeed(speed);
+                //rotate = adjustRotate(rotate);
+                if (speed > 0.0) {
+                    if (rotate > 0.0) {
+                        leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                        rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
+                    } else {
+                        leftMaster.set(ControlMode.Velocity, Math.max(speed, -rotate) * MAX_RPM);
+                        rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+                    }
+                } else {
+                    if (rotate > 0.0) {
+                        leftMaster.set(ControlMode.Velocity, -Math.max(-speed, rotate) * MAX_RPM);
+                        rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+                    } else {
+                        leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                        rightMaster.set(ControlMode.Velocity, -Math.max(-speed, -rotate) * MAX_RPM);
+                    }
+                }
+            }
 }

@@ -8,8 +8,6 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
-import org.usfirst.frc2876.DeepSpace2019.subsystems.Hatch;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class HatchUp extends Command {
