@@ -1,10 +1,16 @@
 package org.usfirst.frc2876.DeepSpace2019;
 
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmDown;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmStop;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmUp;
 // import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
 import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
+import org.usfirst.frc2876.DeepSpace2019.commands.ScoopIn;
+import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
+import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;// import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -54,9 +60,18 @@ public class OI {
         // SmartDashboard Buttons
         SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
         SmartDashboard.putData("testPixy", new TestPixy());
+
         SmartDashboard.putData("Hatch Stop", new HatchStop());
         SmartDashboard.putData("Hatch Up", new HatchUp());
         SmartDashboard.putData("Hatch Down", new HatchDown());
+
+        SmartDashboard.putData("Arm Up", new ArmUp());
+        SmartDashboard.putData("Arm Down", new ArmDown());
+        SmartDashboard.putData("Arm Stop", new ArmStop());
+
+        SmartDashboard.putData("Scoop In", new ScoopIn());
+        SmartDashboard.putData("Scoop Out", new ScoopOut());
+        SmartDashboard.putData("Scoop Stop", new ScoopStop());
 /* 
         lJoyButton = new JoystickButton(xboxController, LJOY_BUTTON);
         lJoyButton.whileHeld(new HatchDown());

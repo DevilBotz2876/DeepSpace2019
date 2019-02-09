@@ -2,7 +2,11 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -26,8 +30,7 @@ public class Scoop extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        // setDefaultCommand(new MySpecialCommand());
+        setDefaultCommand(new ScoopStop());
     }
 
     @Override
@@ -35,11 +38,22 @@ public class Scoop extends Subsystem {
         // Put code here to be run every loop
 
         // TODO Call udpate dashboard here
+        SmartDashboard.putNumber("Arm Motor Output", master.get());
 
     }
     // TODO Add an update dashboard method
+    
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
+    public void scoopIn() {
+        master.set(0.5);
+    }
+
+    public void scoopOut() {
+        master.set(-0.5);
+    }
+
+    public void scoopStop() {
+        master.set(0);
+    }
 
 }
