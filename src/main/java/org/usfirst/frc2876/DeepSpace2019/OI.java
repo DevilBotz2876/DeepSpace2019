@@ -1,10 +1,14 @@
 package org.usfirst.frc2876.DeepSpace2019;
 
-import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
-import org.usfirst.frc2876.DeepSpace2019.commands.*;
 // import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
+import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
+import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;// import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -41,6 +45,9 @@ public class OI {
 
     public XboxController xboxController;
 
+    //Button rJoyButton;
+    //Button lJoyButton;
+
     public OI() {
         xboxController = new XboxController(0);
 
@@ -50,6 +57,12 @@ public class OI {
         SmartDashboard.putData("Hatch Stop", new HatchStop());
         SmartDashboard.putData("Hatch Up", new HatchUp());
         SmartDashboard.putData("Hatch Down", new HatchDown());
+/* 
+        lJoyButton = new JoystickButton(xboxController, LJOY_BUTTON);
+        lJoyButton.whileHeld(new HatchDown());
+        
+        rJoyButton = new JoystickButton(xboxController, RJOY_BUTTON);
+        rJoyButton.whileHeld(new HatchUp()); */
     }
 
     public XboxController getXboxController() {
@@ -93,6 +106,9 @@ public class OI {
 	// 		Y_BUTTON=4,
 	// 		START_BUTTON=8,
 	// 		LJOY_BUTTON=9,
-	// 		RJOY_BUTTON=10;    
+    // 		RJOY_BUTTON=10;
+    
+
+
 }
 

@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
 
         chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
         SmartDashboard.putData("Auto mode", chooser);
+        hatch.setupShuffleboard();
     }
 
     /**

@@ -47,7 +47,7 @@ public class Hatch extends Subsystem {
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
         master.configAllSettings(allConfigs);
 
-        setupShuffleboard();
+        
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Hatch extends Subsystem {
         setDefaultCommand(new HatchStop());
     }
 
-    private void setupShuffleboard() {
+    public void setupShuffleboard() {
         // Shuffleboard stuff
         tab = Shuffleboard.getTab("Hatch");
 
