@@ -5,7 +5,11 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -19,6 +23,8 @@ public class DriveTrain extends Subsystem {
     private WPI_TalonSRX talonSRX2;
     private WPI_TalonSRX talonSRX1;
     private DifferentialDrive differentialDrive;
+
+    public AHRS navx;
 
     private WPI_TalonSRX rightMaster;
     private WPI_TalonSRX leftMaster;
@@ -40,6 +46,9 @@ public class DriveTrain extends Subsystem {
     // TODO Declare navx
 
     public DriveTrain() {
+
+        navx = new AHRS(SPI.Port.kMXP);
+
         talonSRX4 = new WPI_TalonSRX(4);
         talonSRX3 = new WPI_TalonSRX(3);
         talonSRX2 = new WPI_TalonSRX(2);
