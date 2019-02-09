@@ -8,6 +8,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
+import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
+import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -31,6 +33,9 @@ public class DriveTrain extends Subsystem {
     private WPI_TalonSRX rightFollower;
     private WPI_TalonSRX leftFollower;
 
+    private TalonSrxEncoder leftEncoder;
+    private TalonSrxEncoder rightEncoder;
+
     // Calculated this following instructions here:
     // https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#confirm-sensor-resolution-velocity
     //
@@ -41,8 +46,17 @@ public class DriveTrain extends Subsystem {
     // (100% X 1023) / 3200 = .3197
     //
     private final double kF = .3197f;
-    private final double MAX_RPM = 3380.0f;
- 
+
+    // Don't allow drivetrain to run at max speed. If we did then there is no room
+    // for PID to adjust velocity if we have already maxed out.
+    private final double MAX_RPM = 3200.0 * .9;
+
+    // Use this to limit how fast velocity can be adjusted.
+    private Ramp rampArcadeSpeed;
+    private Ramp rampArcadeRotate;
+    private Ramp rampTankLeft;
+    private Ramp rampTankRight;
+
     // TODO Declare navx
 
     public DriveTrain() {
@@ -90,7 +104,13 @@ public class DriveTrain extends Subsystem {
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
         // rightMaster.configAllSettings(allConfigs);
 
-
+        leftEncoder = new TalonSrxEncoder(leftMaster);
+        rightEncoder = new TalonSrxEncoder(rightMaster);
+        
+        rampArcadeSpeed = new Ramp(MAX_RPM*.1);
+        rampArcadeRotate = new Ramp(MAX_RPM*.1);
+        rampTankLeft = new Ramp(MAX_RPM*.1);
+        rampTankRight = new Ramp(MAX_RPM*.1);
 
         // TODO initialize navx variable
 
@@ -125,30 +145,39 @@ public class DriveTrain extends Subsystem {
     }
 
     public void velocityTankDrive(double leftValue, double rightValue) {
-        leftMaster.set(ControlMode.Velocity, leftValue*MAX_RPM);
-        rightMaster.set(ControlMode.Velocity, rightValue*MAX_RPM);
+    
+        double leftRpm = leftValue * MAX_RPM;
+        leftRpm = rampTankLeft.get(leftRpm);
+        double rightRpm = rightValue * MAX_RPM;
+        rightRpm = rampTankRight.get(rightRpm);
+
+        leftMaster.set(ControlMode.Velocity, leftRpm);
+        rightMaster.set(ControlMode.Velocity, rightRpm);
     }
 
     public void setVelocityArcadeJoysticks(double speed, double rotate) {
 
-                //speed = adjustSpeed(speed);
-                //rotate = adjustRotate(rotate);
-                if (speed > 0.0) {
-                    if (rotate > 0.0) {
-                        leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
-                        rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
-                    } else {
-                        leftMaster.set(ControlMode.Velocity, Math.max(speed, -rotate) * MAX_RPM);
-                        rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
-                    }
-                } else {
-                    if (rotate > 0.0) {
-                        leftMaster.set(ControlMode.Velocity, -Math.max(-speed, rotate) * MAX_RPM);
-                        rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
-                    } else {
-                        leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
-                        rightMaster.set(ControlMode.Velocity, -Math.max(-speed, -rotate) * MAX_RPM);
-                    }
-                }
+        speed = rampArcadeSpeed.get(speed);
+        rotate = rampArcadeRotate.get(rotate);
+
+        // speed = adjustSpeed(speed);
+        // rotate = adjustRotate(rotate);
+        if (speed > 0.0) {
+            if (rotate > 0.0) {
+                leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
+            } else {
+                leftMaster.set(ControlMode.Velocity, Math.max(speed, -rotate) * MAX_RPM);
+                rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
             }
+        } else {
+            if (rotate > 0.0) {
+                leftMaster.set(ControlMode.Velocity, -Math.max(-speed, rotate) * MAX_RPM);
+                rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+            } else {
+                leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                rightMaster.set(ControlMode.Velocity, -Math.max(-speed, -rotate) * MAX_RPM);
+            }
+        }
+    }
 }
