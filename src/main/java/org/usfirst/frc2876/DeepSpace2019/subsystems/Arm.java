@@ -1,11 +1,21 @@
 package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
+import java.util.Map;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmStop;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmUp;
+import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -18,6 +28,14 @@ public class Arm extends Subsystem {
 
     private WPI_TalonSRX master;
     private WPI_TalonSRX follower;
+
+    private ShuffleboardTab tab;
+    private NetworkTableEntry nteLimit;
+    private NetworkTableEntry nteMotorOutput;
+    private NetworkTableEntry ntePosition;
+    private TalonSrxEncoder encoder;
+
+
 
     public Arm() {
         talonSRX5 = new WPI_TalonSRX(5);
@@ -48,12 +66,32 @@ public class Arm extends Subsystem {
         setDefaultCommand(new ArmStop());
     }
 
+    public void setupShuffleboard() {
+        // Shuffleboard stuff
+        tab = Shuffleboard.getTab("Arm");
+
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
+        // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
+        nteMotorOutput = tab.add("ArmMotorOutput", master.get()).getEntry();
+        tab.add("ArmEncoder", encoder);
+
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
+        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
+                .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+        hatchCommands.add(new ArmStop());
+        hatchCommands.add(new ArmDown());
+        hatchCommands.add(new ArmUp());
+
+    }
+
     @Override
     public void periodic() {
         // Put code here to be run every loop
 
         // TODO Call udpate dashboard here
         SmartDashboard.putNumber("Arm Motor Output", master.get());
+        nteMotorOutput.setDouble(master.get());
 
     }
     // TODO Add an update dashboard method

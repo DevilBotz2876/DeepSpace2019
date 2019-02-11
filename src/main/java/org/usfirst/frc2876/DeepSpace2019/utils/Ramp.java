@@ -10,12 +10,13 @@ public class Ramp {
     private double maxChangePerMilli;
 
     public Ramp(double maxChangePerSecond) {
-        this.maxChangePerMilli = maxChangePerSecond/1000;
+        setMaxChangePerSecond(maxChangePerSecond);
     }
 
     private double timeNowMilli() {
         return RobotController.getFPGATime()*1000;
     }
+    
     public double get(double value) {
         double now = timeNowMilli();
         if (value > lastValue) {
@@ -25,5 +26,9 @@ public class Ramp {
         }
         lastTime = timeNowMilli();
         return lastValue;
+    }
+
+    public void setMaxChangePerSecond(double maxChangePerSecond) {
+        this.maxChangePerMilli = maxChangePerSecond/1000;
     }
 }

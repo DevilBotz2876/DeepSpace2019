@@ -1,6 +1,8 @@
 package org.usfirst.frc2876.DeepSpace2019.utils;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -12,12 +14,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * 
  * See https://www.chiefdelphi.com/t/talonsrx-encoder-values-to-smart-dashboard-shuffleboard/343651/2
  */
-public class TalonSrxEncoder extends SendableBase {
+public class TalonSrx extends SendableBase {
 
-  private final TalonSRX talon;
+  private final WPI_TalonSRX talon;
 
-  public TalonSrxEncoder(TalonSRX talon) {
+  public TalonSrx(WPI_TalonSRX talon) {
     this.talon = talon;
+  }
+
+  public String getControlMode() {
+    ControlMode m = talon.getControlMode();
+    return m.toString();
+  }
+
+  public double getOutput() {
+    return talon.get();
   }
 
   public double getDistance() {
@@ -37,7 +48,8 @@ public class TalonSrxEncoder extends SendableBase {
     builder.setSmartDashboardType("Encoder");
     builder.addDoubleProperty("Distance", this::getDistance, null);
     builder.addDoubleProperty("Speed", this::getRate, null);
-    builder.addDoubleProperty("Error", this::getError, null);
-
+    builder.addStringProperty("Mode", this::getControlMode, null);
+    builder.addDoubleProperty("Mode", this::getOutput, null);
+    
   }
 }

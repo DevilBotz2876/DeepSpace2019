@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class XboxDrive extends Command {
 
     private boolean velocityMode;
+    private double forward;
 
     public XboxDrive() {
 
@@ -23,6 +24,7 @@ public class XboxDrive extends Command {
     @Override
     protected void initialize() {
         velocityMode = false;
+        forward = 1.0;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -37,9 +39,16 @@ public class XboxDrive extends Command {
         } else if (xbox.getBumperReleased(Hand.kRight)) {
             velocityMode = false;
         }
-        if (velocityMode) {
+
+        if (xbox.getBumperPressed(Hand.kLeft)) {
+            //forward = forward;
+        } else if (xbox.getBumperReleased(Hand.kLeft)) {
+            forward *= -1;
+        }
+
+        if (!velocityMode) {
             // Robot.driveTrain.velocityTankDrive(-xbox.getY(Hand.kLeft), -xbox.getY(Hand.kRight));
-            Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kLeft));
+            Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kRight)*forward, -xbox.getX(Hand.kLeft)*forward);
         } else {
             //Robot.driveTrain.tankDrive(-xbox.getY(Hand.kLeft), xbox.getY(Hand.kRight));
             Robot.driveTrain.arcadeDrive(xbox.getX(Hand.kRight), -xbox.getY(Hand.kLeft));

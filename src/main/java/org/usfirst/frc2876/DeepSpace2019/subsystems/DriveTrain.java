@@ -1,5 +1,7 @@
 package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
+import java.util.Map;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -7,13 +9,22 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
  * 
@@ -56,6 +67,14 @@ public class DriveTrain extends Subsystem {
     private Ramp rampArcadeRotate;
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
+    private double defaultRamp = .1;
+    
+
+    private double forward;
+
+    private ShuffleboardTab tab;
+    private NetworkTableEntry nteRamp;
+
 
     // TODO Declare navx
 
@@ -93,6 +112,7 @@ public class DriveTrain extends Subsystem {
         rightFollower.setNeutralMode(NeutralMode.Coast);
 
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
+        LiveWindow.addActuator("DriveTrain", "DifferentialDrive", differentialDrive);
 
         differentialDrive.setSafetyEnabled(false);
         // differentialDrive.setExpiration(0.1);
@@ -107,10 +127,13 @@ public class DriveTrain extends Subsystem {
         leftEncoder = new TalonSrxEncoder(leftMaster);
         rightEncoder = new TalonSrxEncoder(rightMaster);
         
-        rampArcadeSpeed = new Ramp(MAX_RPM*.1);
-        rampArcadeRotate = new Ramp(MAX_RPM*.1);
-        rampTankLeft = new Ramp(MAX_RPM*.1);
-        rampTankRight = new Ramp(MAX_RPM*.1);
+        
+        rampArcadeSpeed = new Ramp(MAX_RPM*defaultRamp);
+        rampArcadeRotate = new Ramp(MAX_RPM*defaultRamp);
+        rampTankLeft = new Ramp(MAX_RPM*defaultRamp);
+        rampTankRight = new Ramp(MAX_RPM*defaultRamp);
+
+        forward = 1.0;
 
         // TODO initialize navx variable
 
@@ -121,9 +144,30 @@ public class DriveTrain extends Subsystem {
         setDefaultCommand(new XboxDrive());
     }
 
+    public void setupShuffleboard() {
+        // Shuffleboard stuff
+        tab = Shuffleboard.getTab("DriveTrain");
+
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
+        //nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
+        //nteMotorOutput = tab.add("HatchMotorOutput", master.get()).getEntry();
+        // TODO not sure this will work, does it need to get called in periodic?
+        //tab.add("HatchEncoder", encoder);
+        nteRamp = tab.add("RampRateTuner", 1)
+        .withWidget("Number Slider")
+        .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0), String.valueOf("max"), Double.valueOf(1)))
+        .withSize(2, 1)
+        .getEntry();
+        
+    }
+
     @Override
     public void periodic() {
         // Put code here to be run every loop
+
+        // TODO remove this once ramp rate is tuned.
+        updateRamps();
 
         // TODO Call udpate dashboard here
 
@@ -133,6 +177,15 @@ public class DriveTrain extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
+    // Use this method to tune ramp rate using a slider on shuffleboard
+    public void updateRamps() {
+        double r = nteRamp.getNumber(defaultRamp).doubleValue();
+        rampArcadeRotate.setMaxChangePerSecond(r);
+        rampArcadeSpeed.setMaxChangePerSecond(r);
+        rampTankLeft.setMaxChangePerSecond(r);
+        rampTankRight.setMaxChangePerSecond(r);
+
+    }
     // TODO Add adjustSpeed method to control sensitivity of joystick -> drive
     // output.
 
@@ -145,6 +198,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public void velocityTankDrive(double leftValue, double rightValue) {
+
     
         double leftRpm = leftValue * MAX_RPM;
         leftRpm = rampTankLeft.get(leftRpm);
