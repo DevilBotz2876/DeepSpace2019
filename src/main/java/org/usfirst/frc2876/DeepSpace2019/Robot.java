@@ -58,6 +58,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(hatch);
         driveTrain.setupShuffleboard();
         SmartDashboard.putData(driveTrain);
+        arm.setupShuffleboard();
+        SmartDashboard.putData(arm);
+
 
         SmartDashboard.putData(Scheduler.getInstance());
     }

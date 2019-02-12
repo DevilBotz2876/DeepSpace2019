@@ -15,6 +15,7 @@ import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -26,7 +27,7 @@ public class Hatch extends Subsystem {
     private WPI_TalonSRX talonSRX8;
     private WPI_TalonSRX master;
     private TalonSrxEncoder encoder;
-    private TalonSrx shuffleTalon;
+   
     // private DigitalInput limit;
     private ShuffleboardTab tab;
     private NetworkTableEntry nteLimit;
@@ -48,7 +49,7 @@ public class Hatch extends Subsystem {
         talonSRX8 = new WPI_TalonSRX(8);
         master = talonSRX8;
         encoder = new TalonSrxEncoder(master);
-        shuffleTalon = new TalonSrx(master);
+       
         // limit = new DigitalInput(0);
 
         //periodicLoopCounter = 0;
@@ -83,20 +84,23 @@ public class Hatch extends Subsystem {
         nteMotorOutput = tab.add("HatchMotorOutput", master.get()).getEntry();
         // TODO not sure this will work, does it need to get called in periodic?
         tab.add("HatchEncoder", encoder);
-        tab.add("HatchTalon", shuffleTalon);
+       
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
+        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList)
+                .withSize(2, 3)
                 .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchUp());
 
         //ntePosition = tab.add("Set Position", 1).withWidget("Number Slider").withPosition(1, 1).withSize(2, 1).getEntry();
-        ntePosition = tab.add("Set Position", 1)
-                          .withWidget("Number Slider")
-                          .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.), String.valueOf("max"), Double.valueOf(200.)))
-                          .withSize(2, 1)
+        ntePosition = tab.add("Set position", 1)
+                          //.withWidget("Number Slider")
+                          .withWidget(BuiltInWidgets.kNumberSlider)
+                          //.withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.), String.valueOf("max"), Double.valueOf(200.)))
+                          .withProperties(Map.of("min", 0, "max", 1))
+                          //.withSize(2, 1)
                           .getEntry();
                           
 
@@ -115,7 +119,8 @@ public class Hatch extends Subsystem {
     }
 
     public void setPosition(double pos) {
-        master.set(ControlMode.MotionMagic, pos);
+        //master.set(ControlMode.MotionMagic, pos);
+        System.out.println("slider value: " + pos);
     }
 
     public double getPosition() {
@@ -135,17 +140,23 @@ public class Hatch extends Subsystem {
     }
 
     public void dashboardUpdatePosition() {
-        setPosition(ntePosition.getNumber(20).doubleValue());
+        double dashValue = ntePosition.getNumber(20).doubleValue();
+
+        double maxVal = 400;
+        double maxHalfVal = maxVal / 2;
+        double scaledPos = (dashValue * maxHalfVal) + maxHalfVal;
+
+        setPosition(scaledPos);
     }
 
     @Override
     public void periodic() {
         // Put code here to be run every loop
 
-        // nteLimit.setBoolean(master.getse);
+      
 
         nteMotorOutput.setDouble(master.get());
-
+        dashboardUpdatePosition();
         //setPosition(ntePosition.getNumber(20).doubleValue());
 
         // TODO Call udpate dashboard here

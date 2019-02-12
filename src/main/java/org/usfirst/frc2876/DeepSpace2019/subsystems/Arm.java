@@ -59,6 +59,8 @@ public class Arm extends Subsystem {
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
         master.configAllSettings(allConfigs);
         follower.configAllSettings(allConfigs);
+
+        encoder = new TalonSrxEncoder(master);
     }
 
     @Override

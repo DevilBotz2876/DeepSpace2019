@@ -9,9 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
-import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
-import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
-import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
@@ -21,9 +18,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
@@ -167,7 +162,7 @@ public class DriveTrain extends Subsystem {
         // Put code here to be run every loop
 
         // TODO remove this once ramp rate is tuned.
-        updateRamps();
+        //updateRamps();
 
         // TODO Call udpate dashboard here
 
