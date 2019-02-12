@@ -81,18 +81,20 @@ public class Hatch extends Subsystem {
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
         // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).getEntry();
+        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(5, 3).withPosition(0, 7).getEntry();
         // TODO not sure this will work, does it need to get called in periodic?
         tab.add("HatchEncoder", encoder);
        
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
         ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList)
-                .withSize(2, 3)
+                .withSize(4, 6)
                 .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
-        hatchCommands.add(new HatchStop());
+        hatchCommands.add(new HatchStop()).withSize(4,1);
         hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchUp());
+
+        //tab.add(new HatchStop()).withSize(4,3).withProperties(Map.of("Label position", "HIDDEN"));
 
         //ntePosition = tab.add("Set Position", 1).withWidget("Number Slider").withPosition(1, 1).withSize(2, 1).getEntry();
         ntePosition = tab.add("Set position", 1)
@@ -156,7 +158,7 @@ public class Hatch extends Subsystem {
       
 
         nteMotorOutput.setDouble(master.get());
-        dashboardUpdatePosition();
+        //dashboardUpdatePosition();
         //setPosition(ntePosition.getNumber(20).doubleValue());
 
         // TODO Call udpate dashboard here
