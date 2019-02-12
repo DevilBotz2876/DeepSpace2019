@@ -1,15 +1,17 @@
 package org.usfirst.frc2876.DeepSpace2019;
 
-import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
+import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
+import org.usfirst.frc2876.DeepSpace2019.subsystems.Arm;
+import org.usfirst.frc2876.DeepSpace2019.subsystems.DriveTrain;
+import org.usfirst.frc2876.DeepSpace2019.subsystems.Hatch;
+import org.usfirst.frc2876.DeepSpace2019.subsystems.Scoop;
+import org.usfirst.frc2876.DeepSpace2019.subsystems.Vision;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc2876.DeepSpace2019.commands.*;
-import org.usfirst.frc2876.DeepSpace2019.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,11 +26,12 @@ public class Robot extends TimedRobot {
     SendableChooser<Command> chooser = new SendableChooser<>();
 
     public static OI oi;
-    public static Pixy2 pixyHatch;
+    
     public static DriveTrain driveTrain;
     public static Arm arm;
     public static Scoop scoop;
     public static Hatch hatch;
+    public static Vision vision;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -41,14 +44,14 @@ public class Robot extends TimedRobot {
         arm = new Arm();
         scoop = new Scoop();
         hatch = new Hatch();
+        vision = new Vision();
 
         // OI must be constructed after subsystems. If the OI creates Commands
         // (which it very likely will), subsystems are not guaranteed to be
         // constructed yet. Thus, their requires() statements may grab null
         // pointers. Bad news. Don't move it.
         oi = new OI();
-        pixyHatch = new Pixy2("pixyHatch", 0x54);
-
+        
         // Add commands to Autonomous Sendable Chooser
 
         chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
@@ -60,6 +63,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(driveTrain);
         arm.setupShuffleboard();
         SmartDashboard.putData(arm);
+
+        vision.setupShuffleboard();
+        SmartDashboard.putData(vision);
 
 
         SmartDashboard.putData(Scheduler.getInstance());

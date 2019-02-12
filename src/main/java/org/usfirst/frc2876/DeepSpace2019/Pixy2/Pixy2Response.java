@@ -58,9 +58,9 @@ public class Pixy2Response {
                 start = Pixy2.bytesToShort(byteCur, bytePrev);
 
                 // System.out.format("sync: %02X %02X\n", bytePrev, byteCur);
-                System.out.format("sync: %02X %02X start: %02X %02X %02X\n", bytePrev, byteCur, start,
-                        PIXY_CHECKSUM_SYNC, PIXY_NO_CHECKSUM_SYNC);
-                System.out.println("start " + (short) start + " == " + PIXY_CHECKSUM_SYNC);
+                // System.out.format("sync: %02X %02X start: %02X %02X %02X\n", bytePrev, byteCur, start,
+                //         PIXY_CHECKSUM_SYNC, PIXY_NO_CHECKSUM_SYNC);
+                // System.out.println("start " + (short) start + " == " + PIXY_CHECKSUM_SYNC);
 
                 bytePrev = byteCur;
                 // cprev = c;

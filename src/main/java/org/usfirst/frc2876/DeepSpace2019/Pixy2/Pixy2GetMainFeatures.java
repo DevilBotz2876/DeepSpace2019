@@ -40,7 +40,7 @@ public class Pixy2GetMainFeatures {
         if (rawBytes.length == 0) {
             return;
         }
-        Pixy2.printBytes("getMainFeatures reply:", rawBytes); 
+        //Pixy2.printBytes("getMainFeatures reply:", rawBytes); 
         //getMainFeatures reply:: 01 06 2C 07 3A 0D AB 04
 
         if(rawBytes[0] == LINE_VECTOR){
@@ -53,7 +53,7 @@ public class Pixy2GetMainFeatures {
                 System.arraycopy(rawBytes, offset, buf, 0, VECTOR_LENGTH);
                 Pixy2Vector v = new Pixy2Vector(buf);
                 vectors[i] = v;
-                v.print();
+                //v.print();
             }
         }
         

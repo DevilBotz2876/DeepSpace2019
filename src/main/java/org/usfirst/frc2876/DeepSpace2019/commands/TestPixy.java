@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class TestPixy extends Command {
   public TestPixy() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.vision);
   }
 
   // Called just before this Command runs the first time
@@ -17,7 +16,7 @@ public class TestPixy extends Command {
   protected void initialize() {
     Pixy2Vector[] vectors;
     try {
-      vectors = Robot.pixyHatch.getVectors();
+      vectors = Robot.vision.pixyHatch.getVectors();
     } catch (Pixy2Exception ex) {
       System.out.println(ex);
       ex.printStackTrace();
