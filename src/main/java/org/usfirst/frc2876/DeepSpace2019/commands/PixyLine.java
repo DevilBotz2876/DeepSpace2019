@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PixyLine extends Command {
   public PixyLine() {
     requires(Robot.vision);
+    requires(Robot.driveTrain);
   }
 
   // Called just before this Command runs the first time
@@ -18,12 +19,18 @@ public class PixyLine extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double out = Robot.vision.lineController.get();
+    double baseVelocity=Robot.driveTrain.MAX_RPM*.3;
+    // TODO double check the signs are correct.
+    Robot.driveTrain.velocityTankDrive(baseVelocity-out, baseVelocity+out);
+
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    // TODO probably should also check that we haven't hit the wall of rocket or cargo ship as well.
+    return Robot.vision.lineController.onTarget();
   }
 
   // Called once after isFinished returns true

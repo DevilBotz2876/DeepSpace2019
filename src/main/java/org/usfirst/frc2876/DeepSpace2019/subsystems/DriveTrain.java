@@ -55,7 +55,7 @@ public class DriveTrain extends Subsystem {
 
     // Don't allow drivetrain to run at max speed. If we did then there is no room
     // for PID to adjust velocity if we have already maxed out.
-    private final double MAX_RPM = 3200.0 * .9;
+    public final double MAX_RPM = 3200.0 * .9;
 
     // Use this to limit how fast velocity can be adjusted.
     private Ramp rampArcadeSpeed;
