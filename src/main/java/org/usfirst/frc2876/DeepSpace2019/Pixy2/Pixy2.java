@@ -31,9 +31,10 @@ public class Pixy2 {
     }
 
 
-    public void version() {
+    public Pixy2Version version() {
         Pixy2Version v = new Pixy2Version(i2c);
-        v.print();
+        //v.print();
+        return v;
     }
     public void setLed() {
         byte r=1;

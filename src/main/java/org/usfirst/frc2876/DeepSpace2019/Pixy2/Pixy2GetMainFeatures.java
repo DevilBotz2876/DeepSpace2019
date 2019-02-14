@@ -29,7 +29,7 @@ public class Pixy2GetMainFeatures {
             response = new Pixy2Response(i2c);
             rawBytes = response.recv();
             if (response.m_type != responseType) {
-                throw new Pixy2Exception(String.format("Response %02X did match request %02X", response.m_type, responseType));
+                throw new Pixy2Exception(String.format("Response 0x%02X did match request 0x%02X. %s", response.m_type, responseType, response));
             }
             parseResponse();
         }

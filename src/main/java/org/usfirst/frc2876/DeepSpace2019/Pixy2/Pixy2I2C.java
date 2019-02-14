@@ -10,9 +10,12 @@ public class Pixy2I2C {
 
     public Pixy2I2C(String id, int address) {
         i2c = new I2C(port, address);
-        name = "Pixy_" + id;
+        name = "Pixy_" + id + "_" + String.format("0x%02X ", address);
     }
 
+    public String toString() {
+        return name;
+    }
     public boolean recv(byte[] buf) {
         try {
             return !i2c.readOnly(buf, buf.length);

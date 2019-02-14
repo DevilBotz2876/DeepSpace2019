@@ -20,12 +20,13 @@ public class HatchStop extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.hatch.hatchStop();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.hatch.hatchStop();
+    //Robot.hatch.hatchStop();
   }
 
   // Make this return true when this Command no longer needs to run execute()

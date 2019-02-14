@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Pixy2Version {
 
+    Pixy2I2C i2c;
     short hardware;
     byte firmwareMajor;
     byte firmwareMinor;
@@ -17,12 +18,16 @@ public class Pixy2Version {
     byte requestType = 14;
     byte responseType = 15;
 
-    public Pixy2Version(byte[] rawBytes) {
-        this.rawBytes = rawBytes;
-        parseResponse();
-    }
+    // public Pixy2Version(byte[] rawBytes) {
+    //     this.rawBytes = rawBytes;
+    //     parseResponse();
+    // }
 
     public Pixy2Version(Pixy2I2C i2c) {
+        this.i2c = i2c;
+    }
+
+    public boolean get() {
         request = new Pixy2Request(requestType, null);
         if (i2c.send(request.buf())) {
             response = new Pixy2Response(i2c);
@@ -31,10 +36,12 @@ public class Pixy2Version {
             } catch (Pixy2Exception ex) {
                 System.out.println(ex);
                 ex.printStackTrace();
-                return;
+                return false;
             }
             parseResponse();
+            return true;
         }
+        return false;
     }
 
     private void parseResponse() {

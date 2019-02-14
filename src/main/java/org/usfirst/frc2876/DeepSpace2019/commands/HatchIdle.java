@@ -8,13 +8,13 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
-public class HatchPosition extends Command {
-  double position;
+// This command does nothing with hatch subsystem.  Set this to default command and it won't interfere(set motors to unexpected speed/state for example) with any testing you might do while working on hatch subsystem
 
-  public HatchPosition(double position) {
-    this.position = position;
+public class HatchIdle extends Command {
+  public HatchIdle() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.hatch);
   }
@@ -22,14 +22,11 @@ public class HatchPosition extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    //Robot.hatch.setPosition(position);
-    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.hatch.dashboardUpdatePosition();
   }
 
   // Make this return true when this Command no longer needs to run execute()

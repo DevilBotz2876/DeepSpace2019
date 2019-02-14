@@ -23,6 +23,17 @@ public class Pixy2Response {
         this.i2c = null;
     }
 
+    public String toString() {
+        StringBuffer buf = new StringBuffer(100);
+        buf.append(i2c);
+        buf.append(" ");
+        buf.append(String.format("type=%02X ", m_type));
+        buf.append("payload=");
+        buf.append(Pixy2.bytesToString(payload));
+
+        return buf.toString();
+    }
+
     private short calcChecksum() {
         if (!m_cs) {
             return 0;

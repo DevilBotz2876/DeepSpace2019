@@ -6,6 +6,7 @@ import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Exception;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Vector;
+import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Version;
 import org.usfirst.frc2876.DeepSpace2019.commands.PixyLine;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -33,9 +34,15 @@ public class Vision extends Subsystem {
     private ShuffleboardTab tab;
     private NetworkTableEntry nteVectors;
     private NetworkTableEntry ntePidError;
+    private NetworkTableEntry ntePidSetpoint;
+    private NetworkTableEntry ntePidOutput;
+    private NetworkTableEntry nteDriveTrainRight;
+    private NetworkTableEntry nteDriveTrainLeft;
+    private NetworkTableEntry nteIsPixyAlive;
+    private NetworkTableEntry nteLinePID;
 
     public Vision() {
-        pixyHatch = new Pixy2("pixyHatch", 0x54);
+        pixyHatch = new Pixy2("Hatch", 0x54);
         pixySource = new PixySource();
         pixyOutput = new PixyOutput();
 
@@ -48,12 +55,16 @@ public class Vision extends Subsystem {
         lineController.setInputRange(0, 78);
         // Set output less than max rpm so we don't try to turn too fast/hard to find
         // the line. Is this valid? Or is tuning PID better/right way?
-        lineController.setOutputRange(0, Robot.driveTrain.MAX_RPM * .5);
+        lineController.setOutputRange(-Robot.driveTrain.MAX_RPM*.5, Robot.driveTrain.MAX_RPM * .5);
+        
+        // .5 is just a starting guess
+        lineController.setP(1.0);
     }
 
     private class PixyOutput implements PIDOutput {
         public void pidWrite(double output) {
-            SmartDashboard.putNumber("LinePID Output", output);
+            //SmartDashboard.putNumber("LinePID Output", output);
+            ntePidOutput.setDouble(output);
             // Don't output/control motors here. Use the pid output elsewhere to control
             // drive train.
         }
@@ -87,8 +98,9 @@ public class Vision extends Subsystem {
             try {
                 vectors = pixyHatch.getVectors();
             } catch (Pixy2Exception e) {
-                System.out.println(e);
-                e.printStackTrace();
+                //System.out.println(e);
+                //e.printStackTrace();
+                return 0;
             }
             // TODO:
             //
@@ -102,7 +114,7 @@ public class Vision extends Subsystem {
             //
             if (vectors != null) {
                 for (int i = 0; i < vectors.length; i++) {
-                    System.out.println(i + "  " + vectors[i]);
+                    //System.out.println(i + "  " + vectors[i]);
                     if (lastVectorId == vectors[i].m_index) {
                         // x1 is the head/arrow end of the vector found by pixy2.
                         return vectors[i].m_x1;
@@ -126,15 +138,31 @@ public class Vision extends Subsystem {
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
         // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        nteVectors = tab.add("Vision/Vectors", pixySource.vectorStrings()).getEntry();
+        nteVectors = tab.add("Vectors", pixySource.vectorStrings()).getEntry();
 
-        ntePidError = tab.add("Vision/LinePIDError", lineController.getError()).getEntry();
+        ntePidError = tab.add("LinePIDError", lineController.getError()).getEntry();
+        ntePidSetpoint = tab.add("LinePIDSetpoint", lineController.getSetpoint()).getEntry();
+        ntePidOutput = tab.add("LinePIDOutput", lineController.get()).getEntry();
+        nteDriveTrainLeft = tab.add("DTLeft", 0).getEntry();
+        nteDriveTrainRight = tab.add("DTRight", 0).getEntry();
+        nteIsPixyAlive = tab.add("IsPixyAlive", false).getEntry();
+        //nteLinePID = tab.add("LinePID", lineController).getEntry();
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout commands = tab.getLayout("Vision/Commands", BuiltInLayouts.kList).withSize(2, 3)
+        ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
                 .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
         commands.add(new PixyLine());
 
+    }
+
+    public void updateShuffleDrivetrainOutputs(double left, double right) {
+        nteDriveTrainLeft.setDouble(left);
+        nteDriveTrainRight.setDouble(right);
+    }
+
+    public boolean isPixyAlive() {
+        Pixy2Version v = pixyHatch.version();
+        return v.get();
     }
 
     @Override
@@ -159,6 +187,12 @@ public class Vision extends Subsystem {
         if (lineController.isEnabled()) {
             nteVectors.setString(pixySource.vectorStrings());
             ntePidError.setDouble(lineController.getError());
+            ntePidSetpoint.setDouble(lineController.getSetpoint());
+            //ntePidOutput.setDouble(lineController.get());
+        } else {
+            if (periodicLoopCounter % 1000 == 0) {
+                nteIsPixyAlive.setBoolean(isPixyAlive());
+            }
         }
         periodicLoopCounter++;
 
