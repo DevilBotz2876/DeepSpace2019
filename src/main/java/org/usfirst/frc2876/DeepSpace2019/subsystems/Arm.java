@@ -99,11 +99,11 @@ public class Arm extends Subsystem {
     // TODO Add an update dashboard method
 
     public void armUp() {
-        master.set(0.5);
+        master.set(-0.3);
     }
 
     public void armDown() {
-        master.set(-0.5);
+        master.set(0.3);
     }
 
     public void armStop() {

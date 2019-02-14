@@ -5,11 +5,11 @@ import java.util.Map;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.*;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
-import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrx;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -60,6 +60,7 @@ public class Hatch extends Subsystem {
         // Set to factory defaults.
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
         master.configAllSettings(allConfigs);
+        
 
         // Setup motion magic
 
@@ -69,7 +70,6 @@ public class Hatch extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        // TODO Set the default command for a subsystem here.
         setDefaultCommand(new HatchStop());
         // setDefaultCommand(new HatchPosition(30));
     }

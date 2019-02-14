@@ -3,6 +3,7 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
@@ -117,7 +118,12 @@ public class DriveTrain extends Subsystem {
         // configAllSettings:
         // https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/b71916c131f6b381ba26bb5ac46302180088614d/Java/Config%20All/src/main/java/frc/robot/Configs.java#L19
         TalonSRXConfiguration allConfigs = new TalonSRXConfiguration();
-        // rightMaster.configAllSettings(allConfigs);
+
+        allConfigs.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
+
+        allConfigs.slot0.kF = kF; 
+        rightMaster.configAllSettings(allConfigs);
+        leftMaster.configAllSettings(allConfigs);
 
         leftEncoder = new TalonSrxEncoder(leftMaster);
         rightEncoder = new TalonSrxEncoder(rightMaster);
@@ -129,8 +135,6 @@ public class DriveTrain extends Subsystem {
         rampTankRight = new Ramp(MAX_RPM*defaultRamp);
 
         forward = 1.0;
-
-        // TODO initialize navx variable
 
     }
 
