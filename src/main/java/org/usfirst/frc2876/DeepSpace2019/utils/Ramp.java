@@ -19,6 +19,7 @@ public class Ramp {
     
     public double get(double value) {
         double now = timeNowMilli();
+        System.out.println(now);
         if (value > lastValue) {
             lastValue = Math.min(value, lastValue + (now - lastTime) * maxChangePerMilli);
         } else {

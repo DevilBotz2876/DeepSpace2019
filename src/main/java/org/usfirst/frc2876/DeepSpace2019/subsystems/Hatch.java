@@ -91,7 +91,7 @@ public class Hatch extends Subsystem {
         tab.add("HatchEncoder", encoder);
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(10, 10)
+        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(8, 10)
                 .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchPosition(0));
@@ -109,7 +109,8 @@ public class Hatch extends Subsystem {
                 // .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.),
                 // String.valueOf("max"), Double.valueOf(200.)))
                 .withProperties(Map.of("min", -1, "max", 1))
-                // .withSize(2, 1)
+                .withSize(2, 1)
+                .withPosition(10, 0)
                 .getEntry();
 
     }

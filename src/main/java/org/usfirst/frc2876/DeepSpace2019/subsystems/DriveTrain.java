@@ -70,7 +70,7 @@ public class DriveTrain extends Subsystem {
 
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
-
+    private NetworkTableEntry nteMotorOutput;
 
     // TODO Declare navx
 
@@ -158,6 +158,8 @@ public class DriveTrain extends Subsystem {
         .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0), String.valueOf("max"), Double.valueOf(1)))
         .withSize(2, 1)
         .getEntry();
+
+        nteMotorOutput = tab.add("RPM", 0).withSize(4, 4).getEntry();
         
     }
 
@@ -179,11 +181,10 @@ public class DriveTrain extends Subsystem {
     // Use this method to tune ramp rate using a slider on shuffleboard
     public void updateRamps() {
         double r = nteRamp.getNumber(defaultRamp).doubleValue();
-        rampArcadeRotate.setMaxChangePerSecond(r);
-        rampArcadeSpeed.setMaxChangePerSecond(r);
-        rampTankLeft.setMaxChangePerSecond(r);
-        rampTankRight.setMaxChangePerSecond(r);
-
+        rampArcadeRotate.setMaxChangePerSecond(MAX_RPM*r);
+        rampArcadeSpeed.setMaxChangePerSecond(MAX_RPM*r);
+        rampTankLeft.setMaxChangePerSecond(MAX_RPM*r);
+        rampTankRight.setMaxChangePerSecond(MAX_RPM*r);
     }
     // TODO Add adjustSpeed method to control sensitivity of joystick -> drive
     // output.
@@ -198,7 +199,7 @@ public class DriveTrain extends Subsystem {
 
     public void velocityTankDrive(double leftValue, double rightValue) {
 
-    
+        updateRamps();
         double leftRpm = leftValue * MAX_RPM;
         leftRpm = rampTankLeft.get(leftRpm);
         double rightRpm = rightValue * MAX_RPM;
@@ -209,10 +210,10 @@ public class DriveTrain extends Subsystem {
     }
 
     public void setVelocityArcadeJoysticks(double speed, double rotate) {
-
-        speed = rampArcadeSpeed.get(speed);
-        rotate = rampArcadeRotate.get(rotate);
-
+        updateRamps();
+        // speed = rampArcadeSpeed.get(MAX_RPM * speed);
+        // rotate = rampArcadeRotate.get(MAX_RPM * rotate);
+        //nteMotorOutput.setDouble(speed);
         // speed = adjustSpeed(speed);
         // rotate = adjustRotate(rotate);
         if (speed > 0.0) {
@@ -220,8 +221,12 @@ public class DriveTrain extends Subsystem {
                 leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
                 rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
             } else {
-                leftMaster.set(ControlMode.Velocity, Math.max(speed, -rotate) * MAX_RPM);
-                rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+                //double l = rampTankLeft.get(Math.max(speed, -rotate) * MAX_RPM);
+                double l = Math.max(speed, -rotate) * MAX_RPM;
+                leftMaster.set(ControlMode.Velocity,l);
+                //double r = rampTankRight.get((speed + rotate) * MAX_RPM);
+                double r = (speed + rotate) * MAX_RPM;
+                rightMaster.set(ControlMode.Velocity, r);
             }
         } else {
             if (rotate > 0.0) {
@@ -233,4 +238,19 @@ public class DriveTrain extends Subsystem {
             }
         }
     }
+
+    private double adjustSpeed(double speed) {
+		// Adjust sensitivity of joysticks. When the joystick is barely
+		// pressed/moved send small output to motors. When joystick
+		// is press/moved alot send BIG output to motors.
+		// y=a(x^3)+(1-a)x
+		double a = .2;
+		return (a * (speed * speed * speed)) + ((1 - a) * speed);
+	}
+
+	private double adjustRotate(double rotate) {
+		// rotate *= .7;
+	
+		return adjustSpeed(rotate);
+	}
 }
