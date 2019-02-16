@@ -55,15 +55,15 @@ public class Vision extends Subsystem {
         lineController.setInputRange(0, 78);
         // Set output less than max rpm so we don't try to turn too fast/hard to find
         // the line. Is this valid? Or is tuning PID better/right way?
-        lineController.setOutputRange(-Robot.driveTrain.MAX_RPM*.5, Robot.driveTrain.MAX_RPM * .5);
-        
+        lineController.setOutputRange(-Robot.driveTrain.MAX_RPM * .5, Robot.driveTrain.MAX_RPM * .5);
+
         // .5 is just a starting guess
         lineController.setP(1.0);
     }
 
     private class PixyOutput implements PIDOutput {
         public void pidWrite(double output) {
-            //SmartDashboard.putNumber("LinePID Output", output);
+            // SmartDashboard.putNumber("LinePID Output", output);
             ntePidOutput.setDouble(output);
             // Don't output/control motors here. Use the pid output elsewhere to control
             // drive train.
@@ -73,10 +73,17 @@ public class Vision extends Subsystem {
     private class PixySource implements PIDSource {
 
         Pixy2Vector[] vectors;
-        int lastVectorId = -1;
+        int lastVectorId;
+        double lastVectorPos;
+        int errors;
+        int noVectorsFound;
 
         public PixySource() {
             vectors = null;
+            lastVectorId = -1;
+            lastVectorPos = 0.0;
+            errors = 0;
+            noVectorsFound = 0;
         }
 
         public String vectorStrings() {
@@ -98,30 +105,44 @@ public class Vision extends Subsystem {
             try {
                 vectors = pixyHatch.getVectors();
             } catch (Pixy2Exception e) {
-                //System.out.println(e);
-                //e.printStackTrace();
+                // System.out.println(e);
+                // e.printStackTrace();
+                errors++;
+                // TODO should we return last vector found?
                 return 0;
+            }
+            if (errors != 0) {
+                System.out.println("Vision: errors=" + errors);
+                errors = 0;
             }
             // TODO:
             //
             // index can change as pixy moves around. To track the same line need to look
             // for same index N times in a row.
             //
-            // x,y can change slightly, observed x changed by 1 in steady camera pic.
+            // x,y can change slightly, observed x changed by 1 in steady camera pic. Maybe
+            // that's fine and PID tuning can account for that.
             //
             // always seemed to get just one vector. Try testing with more than one tape
             // line to see what happens.
             //
             if (vectors != null) {
                 for (int i = 0; i < vectors.length; i++) {
-                    //System.out.println(i + "  " + vectors[i]);
+                    // System.out.println(i + " " + vectors[i]);
                     if (lastVectorId == vectors[i].m_index) {
+                        if (noVectorsFound != 0) {
+                            System.out.println("Vision: noVectorsFound=" + noVectorsFound);
+                            noVectorsFound = 0;
+                        }
                         // x1 is the head/arrow end of the vector found by pixy2.
-                        return vectors[i].m_x1;
+                        lastVectorPos = vectors[i].m_x1;
+                        return lastVectorPos;
                     }
                     lastVectorId = vectors[i].m_index;
                 }
             }
+            noVectorsFound++;
+            // TODO should we return last vector found?
             return 0;
         }
     }
@@ -146,7 +167,7 @@ public class Vision extends Subsystem {
         nteDriveTrainLeft = tab.add("DTLeft", 0).getEntry();
         nteDriveTrainRight = tab.add("DTRight", 0).getEntry();
         nteIsPixyAlive = tab.add("IsPixyAlive", false).getEntry();
-        //nteLinePID = tab.add("LinePID", lineController).getEntry();
+        // nteLinePID = tab.add("LinePID", lineController).getEntry();
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
@@ -188,7 +209,7 @@ public class Vision extends Subsystem {
             nteVectors.setString(pixySource.vectorStrings());
             ntePidError.setDouble(lineController.getError());
             ntePidSetpoint.setDouble(lineController.getSetpoint());
-            //ntePidOutput.setDouble(lineController.get());
+            // ntePidOutput.setDouble(lineController.get());
         } else {
             if (periodicLoopCounter % 1000 == 0) {
                 nteIsPixyAlive.setBoolean(isPixyAlive());

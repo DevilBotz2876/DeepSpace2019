@@ -14,7 +14,8 @@ public class Ramp {
     }
 
     private double timeNowMilli() {
-        return RobotController.getFPGATime()*1000;
+        double microSeconds = RobotController.getFPGATime();
+        return microSeconds/1000;
     }
     
     public double get(double value) {

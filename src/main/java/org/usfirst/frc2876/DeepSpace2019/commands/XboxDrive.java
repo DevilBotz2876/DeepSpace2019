@@ -46,7 +46,10 @@ public class XboxDrive extends Command {
             forward *= -1;
         }
 
+        // on real robot we want to drive in velocity mode by default
         if (!velocityMode) {
+        // on practice bot an encoder is broken so let's drive in open loop
+        //if (velocityMode) {
             // Robot.driveTrain.velocityTankDrive(-xbox.getY(Hand.kLeft), -xbox.getY(Hand.kRight));
             Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kRight)*forward, -xbox.getX(Hand.kLeft)*forward);
         } else {
