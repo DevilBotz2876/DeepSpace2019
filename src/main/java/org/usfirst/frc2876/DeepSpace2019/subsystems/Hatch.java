@@ -83,7 +83,7 @@ public class Hatch extends Subsystem {
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
         // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(5, 3).withPosition(0, 7).getEntry();
+        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(10, 10).withPosition(7, 7).getEntry();
         ntePIDSetpoint = tab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 7)
                 .getEntry();
 
@@ -91,8 +91,8 @@ public class Hatch extends Subsystem {
         tab.add("HatchEncoder", encoder);
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(4, 6)
-                .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(10, 10)
+                .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchPosition(0));
         hatchCommands.add(new HatchDown());
@@ -108,7 +108,7 @@ public class Hatch extends Subsystem {
                 .withWidget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.),
                 // String.valueOf("max"), Double.valueOf(200.)))
-                .withProperties(Map.of("min", 0, "max", 1))
+                .withProperties(Map.of("min", -1, "max", 1))
                 // .withSize(2, 1)
                 .getEntry();
 
@@ -149,9 +149,9 @@ public class Hatch extends Subsystem {
     }
 
     public void dashboardUpdatePosition() {
-        double dashValue = nteSetPosition.getNumber(500).doubleValue();
+        double dashValue = nteSetPosition.getNumber(-300).doubleValue();
 
-        double maxVal = 1700;
+        double maxVal = -1600;
         double maxHalfVal = maxVal / 2;
         double scaledPos = (dashValue * maxHalfVal) + maxHalfVal;
 
