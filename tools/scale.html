@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+
+        <script>
+            // https://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
+            //
+            //          (b-a)(x - min)
+            //  f(x) = --------------  + a
+            //           max - min
+
+            const calculate = function() {
+                const a = parseFloat($("#minTo").val());
+                const b = parseFloat($("#maxTo").val());
+                const min = parseFloat($("#minFrom").val());
+                const max = parseFloat($("#maxFrom").val());
+                const x = parseFloat($("#numR1").val());
+                const retval = (((b - a)*(x - min)) / (max - min)) + a;
+                console.log(retval);
+                $("#numR2").val(retval)
+                return retval;
+            }
+            </script>
+
+    </head>
+    <body>
+        <h3>Scale from:</h3>
+        <label for="minFrom">Min:</label><input type="text" name="minFrom" id="minFrom">
+        <label for="maxFrom">Max:</label><input type="text" name="maxFrom" id="maxFrom">
+
+        <h3>Scale to:</h3>
+        <label for="minTo">Min:</label><input type="text" name="minTo" id="minTo">
+        <label for="maxTo">Max:</label><input type="text" name="maxTo" id="maxTo">
+
+        <h3>Test:</h3>
+        <label for="numR1">Num in First Range:</label><input type="text" name="numR1" id="numR1">
+        <label for="numR2">Num in Second Range:</label><input type="text" name="numR2" id="numR2">
+
+        <button onclick="javascript:calculate()">Go</button>
+    </body>
+</html>
