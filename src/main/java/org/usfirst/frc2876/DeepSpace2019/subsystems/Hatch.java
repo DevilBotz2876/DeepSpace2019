@@ -42,6 +42,14 @@ public class Hatch extends Subsystem {
     // F-gain = (100% X 1023) / 120 F-gain = 0.1097
     private final double kF = 8.525;
 
+    //Hatch position for compbot
+    private final double TOP = 100;
+    private final double BOTTOM = -700;
+
+    //Hatch position for practicebot
+    // private final double TOP = -300;
+    // private final double BOTTOM = -1600;
+
     // Use this to limit how fast we print messages to riolog/console.
     // private int periodicLoopCounter;
 
@@ -150,9 +158,9 @@ public class Hatch extends Subsystem {
     }
 
     public void dashboardUpdatePosition() {
-        double dashValue = nteSetPosition.getNumber(-300).doubleValue();
+        double dashValue = nteSetPosition.getNumber(TOP).doubleValue();
 
-        double maxVal = -1600;
+        double maxVal = BOTTOM;
         double maxHalfVal = maxVal / 2;
         double scaledPos = (dashValue * maxHalfVal) + maxHalfVal;
 

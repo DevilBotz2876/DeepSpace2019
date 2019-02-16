@@ -210,22 +210,23 @@ public class DriveTrain extends Subsystem {
     }
 
     public void setVelocityArcadeJoysticks(double speed, double rotate) {
+       
         updateRamps();
         // speed = rampArcadeSpeed.get(MAX_RPM * speed);
         // rotate = rampArcadeRotate.get(MAX_RPM * rotate);
         //nteMotorOutput.setDouble(speed);
-        // speed = adjustSpeed(speed);
-        // rotate = adjustRotate(rotate);
+        speed = adjustSpeed(speed);
+        rotate = adjustRotate(rotate);
         if (speed > 0.0) {
             if (rotate > 0.0) {
                 leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
                 rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
             } else {
-                //double l = rampTankLeft.get(Math.max(speed, -rotate) * MAX_RPM);
-                double l = Math.max(speed, -rotate) * MAX_RPM;
+                double l = rampTankLeft.get(Math.max(speed, -rotate) * MAX_RPM);
+                //double l = Math.max(speed, -rotate) * MAX_RPM;
                 leftMaster.set(ControlMode.Velocity,l);
-                //double r = rampTankRight.get((speed + rotate) * MAX_RPM);
-                double r = (speed + rotate) * MAX_RPM;
+                double r = rampTankRight.get((speed + rotate) * MAX_RPM);
+                //double r = (speed + rotate) * MAX_RPM;
                 rightMaster.set(ControlMode.Velocity, r);
             }
         } else {
