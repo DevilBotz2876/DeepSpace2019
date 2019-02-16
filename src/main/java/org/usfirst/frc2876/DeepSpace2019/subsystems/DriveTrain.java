@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
+import org.usfirst.frc2876.DeepSpace2019.OI;
+import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
@@ -42,6 +44,9 @@ public class DriveTrain extends Subsystem {
 
     private TalonSrxEncoder leftEncoder;
     private TalonSrxEncoder rightEncoder;
+
+    private boolean toggleInverseDrive = false;
+	private boolean toggleHelp;
 
     // Calculated this following instructions here:
     // https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#confirm-sensor-resolution-velocity
@@ -253,5 +258,24 @@ public class DriveTrain extends Subsystem {
 		// rotate *= .7;
 	
 		return adjustSpeed(rotate);
-	}
+    }
+    
+    // public void inverseDrive(){
+    //     if(toggleInverseDrive == true){
+
+    //     }
+    // }
+	public boolean toggleInverseDrive() {
+		boolean buttonPressed = Robot.oi.getSelectButton();
+		if (buttonPressed && toggleHelp) {
+			toggleInverseDrive = !toggleInverseDrive;
+		}
+		// leftMaster.setInverted(toggleInverseDrive);
+		// rightMaster.setInverted(toggleInverseDrive);
+		toggleHelp = buttonPressed;
+        return toggleInverseDrive;
+    }
+    public boolean getToggleInverseDrive(){
+        return toggleInverseDrive;
+    }
 }

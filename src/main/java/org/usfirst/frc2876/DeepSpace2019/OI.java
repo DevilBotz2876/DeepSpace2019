@@ -14,7 +14,9 @@ import org.usfirst.frc2876.DeepSpace2019.commands.ScoopIn;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;// import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
+import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,6 +59,8 @@ public class OI {
         JoystickButton aButton;
         JoystickButton xButton;
         JoystickButton yButton;
+        JoystickButton startButton;
+        JoystickButton selectButton;
         JoystickButton leftBumper;
         JoystickButton rightBumper;
 
@@ -65,7 +69,7 @@ public class OI {
     public static final int LEFT_X_AXIS = 0, LEFT_Y_AXIS = 1, LEFT_TRIGGER = 2, RIGHT_TRIGGER = 3, RIGHT_X_AXIS = 4,
             RIGHT_Y_AXIS = 5, DPAD_X_AXIS = 6, DPAD_Y_AXIS = 7;
 
-    public static final int LEFT_BUMPER = 5, RIGHT_BUMPER = 6, A_BUTTON = 1, B_BUTTON = 2, X_BUTTON = 3, Y_BUTTON = 4,
+    public static final int LEFT_BUMPER = 5, RIGHT_BUMPER = 6, A_BUTTON = 1, B_BUTTON = 2, X_BUTTON = 3, Y_BUTTON = 4, SELECT_BUTTON = 7,
             START_BUTTON = 8, LJOY_BUTTON = 9, RJOY_BUTTON = 10;
 
     public OI() {
@@ -99,6 +103,9 @@ public class OI {
         yButton = new JoystickButton(xboxController, X_BUTTON);
         yButton.whileHeld(new HatchUp());
 
+        selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
+        selectButton.whenPressed(new ToggleInverseDrive());
+
         leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
         leftBumper.whenPressed(new HatchPosDown());
 
@@ -109,6 +116,10 @@ public class OI {
 
     public XboxController getXboxController() {
         return xboxController;
+    }
+
+    public boolean getSelectButton() {
+        return selectButton.get();
     }
 
     // public double getLeftX() {
