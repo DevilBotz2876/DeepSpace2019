@@ -42,6 +42,14 @@ public class Hatch extends Subsystem {
     // F-gain = (100% X 1023) / 120 F-gain = 0.1097
     private final double kF = 8.525;
 
+    //Hatch position for compbot
+    private final double TOP = 100;
+    private final double BOTTOM = -700;
+
+    //Hatch position for practicebot
+    // private final double TOP = -300;
+    // private final double BOTTOM = -1600;
+
     // Use this to limit how fast we print messages to riolog/console.
     // private int periodicLoopCounter;
 
@@ -83,20 +91,21 @@ public class Hatch extends Subsystem {
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
         // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(10, 10).withPosition(7, 7).getEntry();
-        ntePIDSetpoint = tab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 7)
+        nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(5, 3).withPosition(7, 6).getEntry();
+        ntePIDSetpoint = tab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 15)
                 .getEntry();
 
         // TODO not sure this will work, does it need to get called in periodic?
-        tab.add("HatchEncoder", encoder);
+        tab.add("HatchEncoder", encoder).withPosition(18, 0).withSize(10, 6);
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(8, 10)
+        ShuffleboardLayout hatchCommands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
                 .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
+        hatchCommands.add(new HatchUp());
+        hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchPosition(0));
-        hatchCommands.add(new HatchDown());
-        hatchCommands.add(new HatchUp());
+        
 
         // tab.add(new HatchStop()).withSize(4,3).withProperties(Map.of("Label
         // position", "HIDDEN"));
@@ -109,8 +118,8 @@ public class Hatch extends Subsystem {
                 // .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.),
                 // String.valueOf("max"), Double.valueOf(200.)))
                 .withProperties(Map.of("min", -1, "max", 1))
-                .withSize(2, 1)
-                .withPosition(10, 0)
+                .withSize(10, 6)
+                .withPosition(7, 0)
                 .getEntry();
 
     }
@@ -150,9 +159,9 @@ public class Hatch extends Subsystem {
     }
 
     public void dashboardUpdatePosition() {
-        double dashValue = nteSetPosition.getNumber(-300).doubleValue();
+        double dashValue = nteSetPosition.getNumber(TOP).doubleValue();
 
-        double maxVal = -1600;
+        double maxVal = BOTTOM;
         double maxHalfVal = maxVal / 2;
         double scaledPos = (dashValue * maxHalfVal) + maxHalfVal;
 

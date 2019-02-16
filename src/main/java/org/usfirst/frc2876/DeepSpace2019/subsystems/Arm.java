@@ -2,6 +2,8 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -46,10 +48,8 @@ public class Arm extends Subsystem {
 
         follower.follow(master);
 
-        // TODO Init these to the correct talonSRXnum
-
-        // TODO configure talons and stuffs. Let's try motion magic to control arm
-        // position. If it doesn't work out we can just use position pid on talon.
+        // TODO configure talons and stuffs. 
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
         //
         // https://phoenix-documentation.readthedocs.io/en/latest/ch16_ClosedLoop.html#motion-magic-position-velocity-current-closed-loop-closed-loop
         // https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/b71916c131f6b381ba26bb5ac46302180088614d/Java/MotionMagic/src/main/java/frc/robot/Robot.java
@@ -92,22 +92,23 @@ public class Arm extends Subsystem {
         // Put code here to be run every loop
 
         // TODO Call udpate dashboard here
-        SmartDashboard.putNumber("Arm Motor Output", master.get());
-        nteMotorOutput.setDouble(master.get());
+        //SmartDashboard.putNumber("Arm Motor Output", master.get());
+        //nteMotorOutput.setDouble(master.get());
+        nteMotorOutput.setDouble(master.getSelectedSensorPosition(0));
 
     }
     // TODO Add an update dashboard method
 
     public void armUp() {
-        master.set(-0.3);
+        master.set(ControlMode.PercentOutput, -0.2);
     }
 
     public void armDown() {
-        master.set(0.3);
+        master.set(ControlMode.PercentOutput, 0.05);
     }
 
     public void armStop() {
-        master.set(0);
+        master.set(ControlMode.PercentOutput, 0);
     }
 
 }
