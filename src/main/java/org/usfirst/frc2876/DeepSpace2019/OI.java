@@ -76,8 +76,8 @@ public class OI {
         xboxController = new XboxController(0);
 
         // SmartDashboard Buttons
-        SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
-        SmartDashboard.putData("testPixy", new TestPixy());
+        //SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
+        //SmartDashboard.putData("testPixy", new TestPixy());
 
         SmartDashboard.putData("Hatch Stop", new HatchStop());
         SmartDashboard.putData("Hatch Up", new HatchUp());
@@ -97,20 +97,21 @@ public class OI {
         aButton = new JoystickButton(xboxController, A_BUTTON);
         aButton.whileHeld(new HatchDown());
 
-        xButton = new JoystickButton(xboxController, X_BUTTON);
-        xButton.whileHeld(new HatchPosition(0));
+        yButton = new JoystickButton(xboxController, Y_BUTTON);
+        yButton.whileHeld(new ArmUp());
 
-        yButton = new JoystickButton(xboxController, X_BUTTON);
-        yButton.whileHeld(new HatchUp());
+        xButton = new JoystickButton(xboxController, X_BUTTON);
+        xButton.whileHeld(new ArmDown());
+
+        leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
+        leftBumper.whileHeld(new ScoopIn());
+
+        rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
+        rightBumper.whileHeld(new ScoopOut());
+
 
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
         selectButton.whenPressed(new ToggleInverseDrive());
-
-        leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
-        leftBumper.whenPressed(new HatchPosDown());
-
-        rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
-        rightBumper.whenPressed(new HatchPosDown());
 
     }
 

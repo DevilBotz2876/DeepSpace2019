@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -37,12 +36,8 @@ public class Scoop extends Subsystem {
     public void periodic() {
         // Put code here to be run every loop
 
-        // TODO Call udpate dashboard here
-        SmartDashboard.putNumber("Arm Motor Output", master.get());
 
     }
-    // TODO Add an update dashboard method
-    
 
     public void scoopIn() {
         master.set(0.5);

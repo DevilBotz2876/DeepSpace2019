@@ -68,15 +68,14 @@ public class Hatch extends Subsystem {
         // defaults.
 
         // TODO set this to value we figure out using phoenix tool
-        // allConfigs.slot0.kP = 0;
+        allConfigs.slot0.kP = 1;
 
         // TODO what other config settings were made in phoenix tool that we should set
         // here?
 
-        // master.configAllSettings(allConfigs);
+        //master.configAllSettings(allConfigs);
 
-        // zero encoder sensor
-        master.setSelectedSensorPosition(0, 0, 30);
+        
     }
 
     @Override
@@ -144,6 +143,11 @@ public class Hatch extends Subsystem {
 
     public double getPosition() {
         return master.getSelectedSensorPosition();
+    }
+
+    public void resetPosition() {
+        //zero encoder sensor
+        master.setSelectedSensorPosition(0, 0, 30);
     }
 
     public void positionIncrement() {
