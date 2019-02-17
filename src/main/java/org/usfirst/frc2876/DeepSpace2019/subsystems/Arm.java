@@ -135,7 +135,7 @@ public class Arm extends Subsystem {
 
     public void setPosition(double pos) {
         // master.set(ControlMode.MotionMagic, pos);
-        //master.set(ControlMode.Position, pos);
+        master.set(ControlMode.Position, pos);
         System.out.println("slider value: " + pos);
     }
 
@@ -144,7 +144,7 @@ public class Arm extends Subsystem {
         //return master.getSelectedSensorPosition();
     }
 
-    private final double TOP = -8000;
+    private final double TOP = -4000;
     private final double BOTTOM = -1800;
     public void dashboardUpdatePosition() {
         double dashValue = nteSetPosition.getNumber(0).doubleValue();
