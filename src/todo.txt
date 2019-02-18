@@ -1,8 +1,91 @@
 TODO:
--Hatch
-    -Add constants for hatch positions for each robot
-    -Figure out the two positions (up/down) for hatch placement
-        -Use slider to find numbers
--Shuffleboard:
-    -We can now Move widgets around (pos/size)
-    -keep doing it
+- Shuffleboard:
+  - We can now Move widgets around (pos/size)
+    - start by setting size of widgets so they can be seen.
+    - DO NOT set position of widgets, let shuffle auto arrange.  
+      Then determine if we need to set position or not.  
+      If position of a single widget on a tab is set, need to set for all.
+  - Figure out what driver wants to see on a 'Driver' tab
+    Things like:
+    - fwd/reverse mode
+    - usb cams
+    - pixy info? (only if we get this working after bag)
+
+- Hatch
+  - Figure out how to get limit switch to work.  
+    - Goal when limit switch is hit at top:
+      - stop arm from moving
+      - reset encoder position to zero
+      - Worst case if we don't solve limit switch issues is we don't zero encoder on limit switch, or don't use limit switch at all.
+
+    - Might need to invert motor and/or phase
+      - When motor moves hatch arm down talon should blink green, up should blink red
+      - When hatch mvoes down encoder should increase(positive)
+      - Ensure we never get/see/use negative numbers for position 
+      - Limit switch when hit should stop reverse motion but allow forward. 
+    - One problem we see is that when limit switch is hit hatch arm does not move.
+      See https://www.chiefdelphi.com/t/talon-srx-stuck-at-limit-switch-in-closed-loop/346386/21
+    - Another problem is hit limit switch and zero encoder seems to not work.  The position is reset to zero and after that
+      hatch arm doesn't move up/raise far enough to be within the chassis frame perimeter.
+
+  - Figure out the positions for hatch placement
+      - Already measured and wrote down on paper.
+      - Add constants for hatch positions for comp robot
+  
+  - Create commands that will move the hatch to positions:
+    - A: low pick up
+    - B: raise to lift from feeder and back out(same pos can be used to carry)
+    - C: place panel (same position as B)
+    - D: lower so robot can back up (same as A)
+
+  - Put all talon config done in phoenix tuner into code.
+    - soft limit on down direction. Don't need one on up/raise b/c limit switch will do it.
+    - set kP
+    - config limit switch hw setting
+    - experiment with setting max speed so hatch doesn't go too fast and break  
+
+- Arm
+  - Figure out how encoder works.  Use ctre sample code to measure/see what happens.
+    Use https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/Java/MagEncoder_Absolute
+
+  - Get Arm to stop before it hits floor or goes too high using soft limits
+  - Figure out how/if limit switch can be used.  Should be similar to hatch.
+
+  - Write commands to move arm to useful positions.  Determine what those are.
+    - Pickup ball position
+    - Drop ball position
+
+- Arm/Scoop Ball pickup
+  - Assuming arm stuff is figured out...
+  - Write commands to make picking up ball easy.  Create command groups that will:
+    - lower arm and intake scoop when arm is at bottom
+    - raise arm slightly and turn off motor(or set to really low speed?) when ball is captured
+    - raise arm to top and deposit ball.  
+      - Can this be done when robot is right up against rocket or cargo ship?
+        Or does arm need to be raised first, then drive up to rocket/cargo?
+
+- Drive Train
+  - Get reverse direction button/function working
+    - Make sure that pressing button to reverse front/back works for all driving
+  - Finish ramping code
+  - Use/test adjustSpeed to keep robot speed low when joysticks are barely moved. Sensitive mode?
+  - Limit how fast robot can go when arm is above a certain position.
+  - Add a command that will drive robot off ramp autonously.  
+    Hopefully this will prevent robot from tipping if we drive a constant speed each time.
+
+- USB Camera
+  - Do this work after bagging robot
+  - Add code to create/use camera on robot
+    - Get the compression settings and other ones right so picture looks good.
+  - Add code to display camera on shuffleboard. 
+    Or if this is not possible/hard add camera on shuffleboard manually.
+  - Test with bandwith limit set. 
+    - Need to find where the setting to allow bandwidth limit/cap is. I think it is part of radio imaging tool.
+
+- Pixy2
+  - Do this after we bag robot
+  - Test current code to make sure it is reading the line and pid controller is outputting ok.
+  - Figure out how to use pid output to make robot follow line
+    - PixyAssist: use output to control turn but let driver move robot forward/back manually.
+    - PixyAuto: drive completely autonously following line to place hatch.
+
