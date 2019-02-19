@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchIdle;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchPosition;
@@ -30,7 +31,7 @@ public class Hatch extends Subsystem {
     private TalonSrxEncoder encoder;
 
     private ShuffleboardTab tab;
-    //private NetworkTableEntry nteLimit;
+    // private NetworkTableEntry nteLimit;
     private NetworkTableEntry nteMotorOutput;
     private NetworkTableEntry nteSetPosition;
     private NetworkTableEntry ntePIDSetpoint;
@@ -42,13 +43,9 @@ public class Hatch extends Subsystem {
     // F-gain = (100% X 1023) / 120 F-gain = 0.1097
     private final double kF = 8.525;
 
-    //Hatch position for compbot
-    private final double TOP = 100;
-    private final double BOTTOM = -700;
-
-    //Hatch position for practicebot
-    // private final double TOP = -300;
-    // private final double BOTTOM = -1600;
+    // Hatch max/in positions
+    private double TOP;
+    private double BOTTOM;
 
     // Use this to limit how fast we print messages to riolog/console.
     // private int periodicLoopCounter;
@@ -73,9 +70,24 @@ public class Hatch extends Subsystem {
         // TODO what other config settings were made in phoenix tool that we should set
         // here?
 
-        //master.configAllSettings(allConfigs);
+        // master.configAllSettings(allConfigs);
 
-        
+        master.setInverted(false);
+        master.setSensorPhase(false);
+
+        // TODO try setting this to something smaller/bigger than value in hatch up/down
+        // methods to make sure this limits the max speed that hatch moves. 
+        master.configPeakOutputForward(.1);
+        master.configPeakOutputReverse(-1);
+
+        if (Robot.robotSettings.isCompBot()) {
+            TOP = 100;
+            BOTTOM = -700;
+        } else {
+            TOP = -300;
+            BOTTOM = -1600;
+        }
+
     }
 
     @Override
@@ -91,8 +103,7 @@ public class Hatch extends Subsystem {
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
         // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
         nteMotorOutput = tab.add("HatchMotorOutput", master.get()).withSize(5, 3).withPosition(7, 6).getEntry();
-        ntePIDSetpoint = tab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 15)
-                .getEntry();
+        ntePIDSetpoint = tab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 15).getEntry();
 
         // TODO not sure this will work, does it need to get called in periodic?
         tab.add("HatchEncoder", encoder).withPosition(18, 0).withSize(10, 6);
@@ -104,7 +115,6 @@ public class Hatch extends Subsystem {
         hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchPosition(0));
-        
 
         // tab.add(new HatchStop()).withSize(4,3).withProperties(Map.of("Label
         // position", "HIDDEN"));
@@ -116,10 +126,7 @@ public class Hatch extends Subsystem {
                 .withWidget(BuiltInWidgets.kNumberSlider)
                 // .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0.),
                 // String.valueOf("max"), Double.valueOf(200.)))
-                .withProperties(Map.of("min", -1, "max", 1))
-                .withSize(10, 6)
-                .withPosition(7, 0)
-                .getEntry();
+                .withProperties(Map.of("min", -1, "max", 1)).withSize(10, 6).withPosition(7, 0).getEntry();
 
     }
 
@@ -146,7 +153,7 @@ public class Hatch extends Subsystem {
     }
 
     public void resetPosition() {
-        //zero encoder sensor
+        // zero encoder sensor
         master.setSelectedSensorPosition(0, 0, 30);
     }
 

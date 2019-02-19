@@ -11,6 +11,11 @@ TODO:
     - usb cams
     - pixy info? (only if we get this working after bag)
 
+- Practice vs Comp robot
+  - DONE Finish implementing RobotSettings class
+  - DONE Use RobotSettings in drivetrain to change how talons are commanded.
+  - DONE Use RobotSettings in hatch to set different top/bottom position values.
+
 - Hatch
   - Figure out how to get limit switch to work.  
     - Goal when limit switch is hit at top:

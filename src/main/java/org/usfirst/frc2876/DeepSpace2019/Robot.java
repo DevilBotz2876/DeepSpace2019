@@ -6,6 +6,7 @@ import org.usfirst.frc2876.DeepSpace2019.subsystems.DriveTrain;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Hatch;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Scoop;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Vision;
+import org.usfirst.frc2876.DeepSpace2019.utils.RobotSettings;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -26,7 +27,9 @@ public class Robot extends TimedRobot {
     SendableChooser<Command> chooser = new SendableChooser<>();
 
     public static OI oi;
-    
+
+    public static RobotSettings robotSettings;
+
     public static DriveTrain driveTrain;
     public static Arm arm;
     public static Scoop scoop;
@@ -40,6 +43,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
 
+        robotSettings = new RobotSettings();
+
         driveTrain = new DriveTrain();
         arm = new Arm();
         scoop = new Scoop();
@@ -51,7 +56,7 @@ public class Robot extends TimedRobot {
         // constructed yet. Thus, their requires() statements may grab null
         // pointers. Bad news. Don't move it.
         oi = new OI();
-        
+
         // Add commands to Autonomous Sendable Chooser
 
         chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
@@ -66,7 +71,6 @@ public class Robot extends TimedRobot {
 
         vision.setupShuffleboard();
         SmartDashboard.putData(vision);
-
 
         SmartDashboard.putData(Scheduler.getInstance());
     }

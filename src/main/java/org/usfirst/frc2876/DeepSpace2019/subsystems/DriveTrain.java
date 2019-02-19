@@ -15,7 +15,6 @@ import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveReverse;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveStop;
-import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
@@ -66,8 +65,13 @@ public class DriveTrain extends Subsystem {
     private final double kF = .3197f;
 
     // Don't allow drivetrain to run at max speed. If we did then there is no room
-    // for PID to adjust velocity if we have already maxed out.
-    public final double MAX_RPM = 3200.0 * .9;
+    // for PID to adjust velocity if we have already maxed out. Specify a number
+    // between 0-1 to limit rpm to percentage of max.
+    private double RPM_LIMIT = .9;
+    // Set this in constructor
+    private double MAX_RPM;
+
+    public final double MAX_MEASURED_RPM = 3200.0;
 
     // Use this to limit how fast velocity can be adjusted.
     private Ramp rampArcadeSpeed;
@@ -75,8 +79,6 @@ public class DriveTrain extends Subsystem {
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
     private double defaultRamp = .1;
-
-    private double forward;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
@@ -118,11 +120,21 @@ public class DriveTrain extends Subsystem {
         rightFollower.setNeutralMode(NeutralMode.Coast);
 
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
-        LiveWindow.addActuator("DriveTrain", "DifferentialDrive", differentialDrive);
+        //LiveWindow.addActuator("DriveTrain", "DifferentialDrive", differentialDrive);
 
         differentialDrive.setSafetyEnabled(false);
         // differentialDrive.setExpiration(0.1);
         differentialDrive.setMaxOutput(1.0);
+
+        if (Robot.robotSettings.isCompBot()) {
+            MAX_RPM = MAX_MEASURED_RPM * RPM_LIMIT;
+        } else {
+            // practice bot has a broken encoder on one side of drive train. So can't drive
+            // in velocity closed loop mode. Set MAX_RPM to value between 0-1 so that any
+            // settings/adjusts that would normally treat it as RPM leaves it as percent
+            // output
+            MAX_RPM = 1;
+        }
 
         // TODO configure pid on talons and stuffs. Example how to use
         // configAllSettings:
@@ -142,8 +154,6 @@ public class DriveTrain extends Subsystem {
         rampArcadeRotate = new Ramp(MAX_RPM * defaultRamp);
         rampTankLeft = new Ramp(MAX_RPM * defaultRamp);
         rampTankRight = new Ramp(MAX_RPM * defaultRamp);
-
-        forward = 1.0;
 
     }
 
@@ -181,20 +191,12 @@ public class DriveTrain extends Subsystem {
     @Override
     public void periodic() {
         // Put code here to be run every loop
-
-        // TODO remove this once ramp rate is tuned.
-        // updateRamps();
-
-        // TODO Call udpate dashboard here
-
     }
-    // TODO Add an update dashboard method
-
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     // Use this method to tune ramp rate using a slider on shuffleboard
-    public void updateRamps() {
+    private void updateRamps() {
         double r = nteRamp.getNumber(defaultRamp).doubleValue();
         rampArcadeRotate.setMaxChangePerSecond(MAX_RPM * r);
         rampArcadeSpeed.setMaxChangePerSecond(MAX_RPM * r);
@@ -274,8 +276,14 @@ public class DriveTrain extends Subsystem {
         rightRPM = rampTankRight.get(rightRPM);
 
         // Send velocity setpoint(RPMs) to talons
-        leftMaster.set(ControlMode.Velocity, leftRPM);
-        rightMaster.set(ControlMode.Velocity, rightRPM);
+        if (Robot.robotSettings.isCompBot()) {
+            leftMaster.set(ControlMode.Velocity, leftRPM);
+            rightMaster.set(ControlMode.Velocity, rightRPM);
+        } else {
+            leftMaster.set(ControlMode.PercentOutput, leftRPM);
+            rightMaster.set(ControlMode.PercentOutput, rightRPM);
+
+        }
     }
 
     private double adjustJoystickSensitivity(double speed) {
@@ -287,11 +295,6 @@ public class DriveTrain extends Subsystem {
         return (a * (speed * speed * speed)) + ((1 - a) * speed);
     }
 
-    // public void inverseDrive(){
-    // if(toggleInverseDrive == true){
-
-    // }
-    // }
     public boolean toggleInverseDrive() {
         boolean buttonPressed = Robot.oi.getSelectButton();
         if (buttonPressed && toggleHelp) {
