@@ -1,8 +1,0 @@
-TODO:
--Hatch
-    -Add constants for hatch positions for each robot
-    -Figure out the two positions (up/down) for hatch placement
-        -Use slider to find numbers
--Shuffleboard:
-    -We can now Move widgets around (pos/size)
-    -keep doing it

@@ -55,7 +55,7 @@ public class Vision extends Subsystem {
         lineController.setInputRange(0, 78);
         // Set output less than max rpm so we don't try to turn too fast/hard to find
         // the line. Is this valid? Or is tuning PID better/right way?
-        lineController.setOutputRange(-Robot.driveTrain.MAX_RPM * .5, Robot.driveTrain.MAX_RPM * .5);
+        //lineController.setOutputRange(-Robot.driveTrain.MAX_RPM * .5, Robot.driveTrain.MAX_RPM * .5);
 
         // .5 is just a starting guess
         lineController.setP(1.0);
