@@ -1,5 +1,6 @@
 package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
+import java.io.CharArrayReader;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,6 +11,7 @@ import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchIdle;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchPosition;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchSliderPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
@@ -45,6 +47,8 @@ public class Hatch extends Subsystem {
 
     // Hatch max/in positions
     public double TOP;
+    public double CARRY;
+    public double PICKUP;
     public double BOTTOM;
 
     // Use this to limit how fast we print messages to riolog/console.
@@ -81,8 +85,10 @@ public class Hatch extends Subsystem {
         master.configPeakOutputReverse(-.8);
 
         if (Robot.robotSettings.isCompBot()) {
-            TOP = 100;
-            BOTTOM = -700;
+            TOP = 700;
+            PICKUP = 100;
+            CARRY = 200;
+            BOTTOM = -33;
         } else {
             TOP = -300;
             BOTTOM = -1600;
@@ -114,7 +120,14 @@ public class Hatch extends Subsystem {
         hatchCommands.add(new HatchUp());
         hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchStop());
-        hatchCommands.add(new HatchPosition(0));
+        hatchCommands.add(new HatchSliderPosition());
+
+        tab.add("TOP", new HatchPosition(TOP));
+        tab.add("BOT", new HatchPosition(BOTTOM));
+        tab.add("CARRY", new HatchPosition(CARRY));
+        tab.add("PICKUP", new HatchPosition(PICKUP));
+
+        
 
         // tab.add(new HatchStop()).withSize(4,3).withProperties(Map.of("Label
         // position", "HIDDEN"));

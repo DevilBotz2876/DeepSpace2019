@@ -10,8 +10,9 @@ package org.usfirst.frc2876.DeepSpace2019.commands;
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class HatchPosDown extends Command {
-  public HatchPosDown() {
+public class HatchHoldPosition extends Command {
+
+  public HatchHoldPosition() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.hatch);
   }
@@ -19,7 +20,8 @@ public class HatchPosDown extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.hatch.positionDecrement();
+    double position = Robot.hatch.getPosition();
+    Robot.hatch.setPosition(position);
   }
 
   // Called repeatedly when this Command is scheduled to run
