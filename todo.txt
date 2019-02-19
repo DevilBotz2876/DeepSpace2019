@@ -11,6 +11,10 @@ TODO:
     - usb cams
     - pixy info? (only if we get this working after bag)
 
+- Joysticks/buttons
+  - Want to change how buttons work depending which direction robot is driving.
+    See https://www.chiefdelphi.com/t/changing-whenpressed-behavior-of-joystick-button-object/347008/5
+
 - Practice vs Comp robot
   - DONE Finish implementing RobotSettings class
   - DONE Use RobotSettings in drivetrain to change how talons are commanded.
