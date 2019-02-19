@@ -22,14 +22,15 @@ public class HatchPosition extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    //Robot.hatch.setPosition(position);
+    Robot.hatch.setPosition(position);
     
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.hatch.dashboardUpdatePosition();
+    //Robot.hatch.dashboardUpdatePosition();
+
   }
 
   // Make this return true when this Command no longer needs to run execute()

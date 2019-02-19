@@ -44,8 +44,8 @@ public class Hatch extends Subsystem {
     private final double kF = 8.525;
 
     // Hatch max/in positions
-    private double TOP;
-    private double BOTTOM;
+    public double TOP;
+    public double BOTTOM;
 
     // Use this to limit how fast we print messages to riolog/console.
     // private int periodicLoopCounter;
@@ -77,8 +77,8 @@ public class Hatch extends Subsystem {
 
         // TODO try setting this to something smaller/bigger than value in hatch up/down
         // methods to make sure this limits the max speed that hatch moves. 
-        master.configPeakOutputForward(.1);
-        master.configPeakOutputReverse(-1);
+        master.configPeakOutputForward(.8);
+        master.configPeakOutputReverse(-.8);
 
         if (Robot.robotSettings.isCompBot()) {
             TOP = 100;

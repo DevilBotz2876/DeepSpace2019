@@ -22,7 +22,9 @@ public class RobotSettings {
     public boolean isCompBot() {
         // If digital port stuff doesn't work as expected, just make this return true
         // all the time if working on compbot, return false if on practice bot.
-        return !dioPort.get();
+        boolean isCB = dioPort.get();
+        System.out.println("isCompBot " + isCB);
+        return isCB;
     }
 
 }

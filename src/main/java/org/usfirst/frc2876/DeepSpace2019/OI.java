@@ -14,6 +14,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.ScoopIn;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;// import org.usfirst.frc2876.DeepSpace2019.commands.TestPixy;
+// import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
 import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -92,10 +93,10 @@ public class OI {
         SmartDashboard.putData("Scoop Stop", new ScoopStop());
 
         bButton = new JoystickButton(xboxController, B_BUTTON);
-        bButton.whileHeld(new HatchUp());
+        bButton.whenPressed(new HatchPosition(Robot.hatch.TOP));
 
         aButton = new JoystickButton(xboxController, A_BUTTON);
-        aButton.whileHeld(new HatchDown());
+        aButton.whenPressed(new HatchPosition(Robot.hatch.BOTTOM));
 
         yButton = new JoystickButton(xboxController, Y_BUTTON);
         yButton.whileHeld(new ArmUp());
