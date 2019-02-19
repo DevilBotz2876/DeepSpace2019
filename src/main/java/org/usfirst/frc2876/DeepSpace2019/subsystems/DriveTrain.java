@@ -120,7 +120,7 @@ public class DriveTrain extends Subsystem {
         rightFollower.setNeutralMode(NeutralMode.Coast);
 
         differentialDrive = new DifferentialDrive(leftMaster, rightMaster);
-        //LiveWindow.addActuator("DriveTrain", "DifferentialDrive", differentialDrive);
+        // LiveWindow.addActuator("DriveTrain", "DifferentialDrive", differentialDrive);
 
         differentialDrive.setSafetyEnabled(false);
         // differentialDrive.setExpiration(0.1);
@@ -224,6 +224,8 @@ public class DriveTrain extends Subsystem {
         rightMaster.set(ControlMode.Velocity, rightRpm);
     }
 
+    // Note only use this to control drive train from joysticks. DO NOT use this
+    // method to control robot from PID loops or other non-joystick sources.
     public void setVelocityArcadeJoysticks(double speed, double rotate) {
 
         // This reads slider on dash and changes ramp rate. Should be removed once we
@@ -231,6 +233,14 @@ public class DriveTrain extends Subsystem {
         updateRamps();
 
         double leftRPM, rightRPM;
+
+        // Apply deadband
+        if (Math.abs(speed) < .09) {
+            speed = 0.0;
+        }
+        if (Math.abs(rotate) < .09) {
+            rotate = 0.0;
+        }
 
         speed = adjustJoystickSensitivity(speed);
         rotate = adjustJoystickSensitivity(rotate);
