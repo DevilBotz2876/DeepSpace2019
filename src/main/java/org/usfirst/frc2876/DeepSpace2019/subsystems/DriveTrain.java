@@ -46,7 +46,7 @@ public class DriveTrain extends Subsystem {
     private TalonSrxEncoder rightEncoder;
 
     private boolean toggleInverseDrive = false;
-	private boolean toggleHelp;
+    private boolean toggleHelp;
 
     // Calculated this following instructions here:
     // https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#confirm-sensor-resolution-velocity
@@ -69,7 +69,6 @@ public class DriveTrain extends Subsystem {
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
     private double defaultRamp = .1;
-    
 
     private double forward;
 
@@ -126,18 +125,17 @@ public class DriveTrain extends Subsystem {
 
         allConfigs.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
 
-        allConfigs.slot0.kF = kF; 
+        allConfigs.slot0.kF = kF;
         rightMaster.configAllSettings(allConfigs);
         leftMaster.configAllSettings(allConfigs);
 
         leftEncoder = new TalonSrxEncoder(leftMaster);
         rightEncoder = new TalonSrxEncoder(rightMaster);
-        
-        
-        rampArcadeSpeed = new Ramp(MAX_RPM*defaultRamp);
-        rampArcadeRotate = new Ramp(MAX_RPM*defaultRamp);
-        rampTankLeft = new Ramp(MAX_RPM*defaultRamp);
-        rampTankRight = new Ramp(MAX_RPM*defaultRamp);
+
+        rampArcadeSpeed = new Ramp(MAX_RPM * defaultRamp);
+        rampArcadeRotate = new Ramp(MAX_RPM * defaultRamp);
+        rampTankLeft = new Ramp(MAX_RPM * defaultRamp);
+        rampTankRight = new Ramp(MAX_RPM * defaultRamp);
 
         forward = 1.0;
 
@@ -154,18 +152,17 @@ public class DriveTrain extends Subsystem {
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
-        //nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        //nteMotorOutput = tab.add("HatchMotorOutput", master.get()).getEntry();
+        // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
+        // nteMotorOutput = tab.add("HatchMotorOutput", master.get()).getEntry();
         // TODO not sure this will work, does it need to get called in periodic?
-        //tab.add("HatchEncoder", encoder);
-        nteRamp = tab.add("RampRateTuner", 1)
-        .withWidget("Number Slider")
-        .withProperties(Map.of(String.valueOf("min"), Double.valueOf(0), String.valueOf("max"), Double.valueOf(1)))
-        .withSize(2, 1)
-        .getEntry();
+        // tab.add("HatchEncoder", encoder);
+        nteRamp = tab.add("RampRateTuner", 1).withWidget("Number Slider")
+                .withProperties(
+                        Map.of(String.valueOf("min"), Double.valueOf(0), String.valueOf("max"), Double.valueOf(1)))
+                .withSize(2, 1).getEntry();
 
         nteMotorOutput = tab.add("RPM", 0).withSize(4, 4).getEntry();
-        
+
     }
 
     @Override
@@ -173,7 +170,7 @@ public class DriveTrain extends Subsystem {
         // Put code here to be run every loop
 
         // TODO remove this once ramp rate is tuned.
-        //updateRamps();
+        // updateRamps();
 
         // TODO Call udpate dashboard here
 
@@ -186,13 +183,11 @@ public class DriveTrain extends Subsystem {
     // Use this method to tune ramp rate using a slider on shuffleboard
     public void updateRamps() {
         double r = nteRamp.getNumber(defaultRamp).doubleValue();
-        rampArcadeRotate.setMaxChangePerSecond(MAX_RPM*r);
-        rampArcadeSpeed.setMaxChangePerSecond(MAX_RPM*r);
-        rampTankLeft.setMaxChangePerSecond(MAX_RPM*r);
-        rampTankRight.setMaxChangePerSecond(MAX_RPM*r);
+        rampArcadeRotate.setMaxChangePerSecond(MAX_RPM * r);
+        rampArcadeSpeed.setMaxChangePerSecond(MAX_RPM * r);
+        rampTankLeft.setMaxChangePerSecond(MAX_RPM * r);
+        rampTankRight.setMaxChangePerSecond(MAX_RPM * r);
     }
-    // TODO Add adjustSpeed method to control sensitivity of joystick -> drive
-    // output.
 
     public void arcadeDrive(double xSpeed, double zRotation) {
         differentialDrive.arcadeDrive(xSpeed, zRotation);
@@ -215,67 +210,87 @@ public class DriveTrain extends Subsystem {
     }
 
     public void setVelocityArcadeJoysticks(double speed, double rotate) {
-       
+
+        // This reads slider on dash and changes ramp rate. Should be removed once we
+        // find a a good rate for driving.
         updateRamps();
-        // speed = rampArcadeSpeed.get(MAX_RPM * speed);
-        // rotate = rampArcadeRotate.get(MAX_RPM * rotate);
-        //nteMotorOutput.setDouble(speed);
-        speed = adjustSpeed(speed);
-        rotate = adjustRotate(rotate);
+
+        double leftRPM, rightRPM;
+
+        speed = adjustJoystickSensitivity(speed);
+        rotate = adjustJoystickSensitivity(rotate);
         if (speed > 0.0) {
             if (rotate > 0.0) {
-                leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
-                rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
+                // leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                // rightMaster.set(ControlMode.Velocity, Math.max(speed, rotate) * MAX_RPM);
+                leftRPM = (speed - rotate);
+                rightRPM = Math.max(speed, rotate);
             } else {
-                double l = rampTankLeft.get(Math.max(speed, -rotate) * MAX_RPM);
-                //double l = Math.max(speed, -rotate) * MAX_RPM;
-                leftMaster.set(ControlMode.Velocity,l);
-                double r = rampTankRight.get((speed + rotate) * MAX_RPM);
-                //double r = (speed + rotate) * MAX_RPM;
-                rightMaster.set(ControlMode.Velocity, r);
+                // leftRPM = rampTankLeft.get(Math.max(speed, -rotate) * MAX_RPM);
+                // double l = Math.max(speed, -rotate) * MAX_RPM;
+                // leftMaster.set(ControlMode.Velocity,l);
+                // double r = rampTankRight.get((speed + rotate) * MAX_RPM);
+                // double r = (speed + rotate) * MAX_RPM;
+                // rightMaster.set(ControlMode.Velocity, r);
+                leftRPM = Math.max(speed, -rotate);
+                rightRPM = (speed + rotate);
             }
         } else {
             if (rotate > 0.0) {
-                leftMaster.set(ControlMode.Velocity, -Math.max(-speed, rotate) * MAX_RPM);
-                rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+                // leftMaster.set(ControlMode.Velocity, -Math.max(-speed, rotate) * MAX_RPM);
+                // rightMaster.set(ControlMode.Velocity, (speed + rotate) * MAX_RPM);
+                leftRPM = -Math.max(-speed, rotate);
+                rightRPM = (speed + rotate);
             } else {
-                leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
-                rightMaster.set(ControlMode.Velocity, -Math.max(-speed, -rotate) * MAX_RPM);
+                // leftMaster.set(ControlMode.Velocity, (speed - rotate) * MAX_RPM);
+                // rightMaster.set(ControlMode.Velocity, -Math.max(-speed, -rotate) * MAX_RPM);
+                leftRPM = (speed - rotate);
+                rightRPM = -Math.max(-speed, -rotate);
             }
         }
+        // Turn -1..1 value into RPMs
+        leftRPM *= MAX_RPM;
+        rightRPM *= MAX_RPM;
+
+        // TODO might be a good place to limit how fast robot can go if arm is high or
+        // some other reason/condition. Should this limit be enforced before or after
+        // ramping tho?
+
+        // Ramp left and right RPM to avoid jerky motions, poppin wheelies
+        leftRPM = rampTankLeft.get(leftRPM);
+        rightRPM = rampTankRight.get(rightRPM);
+
+        // Send velocity setpoint(RPMs) to talons
+        leftMaster.set(ControlMode.Velocity, leftRPM);
+        rightMaster.set(ControlMode.Velocity, rightRPM);
     }
 
-    private double adjustSpeed(double speed) {
-		// Adjust sensitivity of joysticks. When the joystick is barely
-		// pressed/moved send small output to motors. When joystick
-		// is press/moved alot send BIG output to motors.
-		// y=a(x^3)+(1-a)x
-		double a = .2;
-		return (a * (speed * speed * speed)) + ((1 - a) * speed);
-	}
-
-	private double adjustRotate(double rotate) {
-		// rotate *= .7;
-	
-		return adjustSpeed(rotate);
+    private double adjustJoystickSensitivity(double speed) {
+        // Adjust sensitivity of joysticks. When the joystick is barely
+        // pressed/moved send small output to motors. When joystick
+        // is press/moved alot send BIG output to motors.
+        // y=a(x^3)+(1-a)x
+        double a = .2;
+        return (a * (speed * speed * speed)) + ((1 - a) * speed);
     }
-    
+
     // public void inverseDrive(){
-    //     if(toggleInverseDrive == true){
+    // if(toggleInverseDrive == true){
 
-    //     }
     // }
-	public boolean toggleInverseDrive() {
-		boolean buttonPressed = Robot.oi.getSelectButton();
-		if (buttonPressed && toggleHelp) {
-			toggleInverseDrive = !toggleInverseDrive;
-		}
-		// leftMaster.setInverted(toggleInverseDrive);
-		// rightMaster.setInverted(toggleInverseDrive);
-		toggleHelp = buttonPressed;
+    // }
+    public boolean toggleInverseDrive() {
+        boolean buttonPressed = Robot.oi.getSelectButton();
+        if (buttonPressed && toggleHelp) {
+            toggleInverseDrive = !toggleInverseDrive;
+        }
+        // leftMaster.setInverted(toggleInverseDrive);
+        // rightMaster.setInverted(toggleInverseDrive);
+        toggleHelp = buttonPressed;
         return toggleInverseDrive;
     }
-    public boolean getToggleInverseDrive(){
+
+    public boolean getToggleInverseDrive() {
         return toggleInverseDrive;
     }
 }

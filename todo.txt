@@ -67,8 +67,8 @@ TODO:
 - Drive Train
   - Get reverse direction button/function working
     - Make sure that pressing button to reverse front/back works for all driving
-  - Finish ramping code
-  - Use/test adjustSpeed to keep robot speed low when joysticks are barely moved. Sensitive mode?
+  - DONE: Finish ramping code
+  - DONE: Use/test adjustSpeed to keep robot speed low when joysticks are barely moved. Sensitive mode?
   - Limit how fast robot can go when arm is above a certain position.
   - Add a command that will drive robot off ramp autonously.  
     Hopefully this will prevent robot from tipping if we drive a constant speed each time.
