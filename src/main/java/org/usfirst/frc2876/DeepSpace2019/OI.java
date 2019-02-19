@@ -91,6 +91,7 @@ public class OI {
         SmartDashboard.putData("Scoop Out", new ScoopOut());
         SmartDashboard.putData("Scoop Stop", new ScoopStop());
 
+        /*
         bButton = new JoystickButton(xboxController, B_BUTTON);
         bButton.whileHeld(new HatchUp());
 
@@ -109,10 +110,36 @@ public class OI {
         rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
         rightBumper.whileHeld(new ScoopOut());
 
-
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
         selectButton.whenPressed(new ToggleInverseDrive());
+        */
+        aButton = new JoystickButton(xboxController, A_BUTTON);
+        bButton = new JoystickButton(xboxController, B_BUTTON);
+        yButton = new JoystickButton(xboxController, Y_BUTTON);
+        xButton = new JoystickButton(xboxController, X_BUTTON);
+        leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
+        rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
+        selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
+        startButton = new JoystickButton(xboxController, START_BUTTON);
 
+        // startButton.whenPressed(new SensitiveMode()); SENSTIVE MODE
+        selectButton.whenPressed(new ToggleInverseDrive());
+        if(Robot.driveTrain.getToggleInverseDrive()){
+            rightBumper.whileHeld(new ScoopIn());
+            leftBumper.whileHeld(new ScoopOut());
+            // aButton.whenPressed(new ArmPosition(0)); ARM TO GROUND
+            // bButton.whenPressed(new ArmPosition(1000)); ARM TO TOP
+            // yButton.whenPressed(new AutoCargoRun()); Auto Cargo Dropoff?
+            yButton.whileHeld(new ArmUp());  // Will be Right Trigger
+            xButton.whileHeld(new ArmDown()); // Will be Left Trigger
+        }else{
+            // aButton.whenPressed(new AutoHatchPickup()); AUTO HATCH PICKUP
+            // bButton.whenPressed(new AutoHatchDropoff()); AUTO HATCH DROPOFF
+            // xButton.whenPressed(new Climb()); Climb?
+            aButton.whileHeld(new HatchDown()); // Will be Left Trigger
+            bButton.whileHeld(new HatchUp()); // Will be Right Trigger
+        }
+        
     }
 
     public XboxController getXboxController() {
