@@ -14,16 +14,19 @@ import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveReverse;
+import org.usfirst.frc2876.DeepSpace2019.commands.DriveRotate;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -40,6 +43,8 @@ public class DriveTrain extends Subsystem {
     private WPI_TalonSRX talonSRX1;
     private DifferentialDrive differentialDrive;
 
+    public PIDController turnController;
+    private int turnOnTargets;
     public AHRS navx;
 
     private WPI_TalonSRX rightMaster;
@@ -155,6 +160,21 @@ public class DriveTrain extends Subsystem {
         rampTankLeft = new Ramp(MAX_RPM * defaultRamp);
         rampTankRight = new Ramp(MAX_RPM * defaultRamp);
 
+        PIDOutput po = new PIDOutput() {
+			public void pidWrite(double output) {
+				output = output * MAX_RPM;
+				 double minMove = 700.0f;
+				 output = minRpm(output, minMove);
+
+                leftMaster.set(ControlMode.Velocity, -output);
+                rightMaster.set(ControlMode.Velocity, output);
+
+            }
+        };
+        turnController = new PIDController(.006, 0.0, 0.0, 0.0, (PIDSource)navx, po);
+        turnController.setPercentTolerance(10.0);
+        turnController.setInputRange(0.0, 360.0);
+        turnController.setOutputRange(-0.5, 0.5);
     }
 
     @Override
@@ -185,6 +205,8 @@ public class DriveTrain extends Subsystem {
         commands.add(new DriveStop());
         commands.add(new DriveForward());
         commands.add(new DriveReverse());
+
+        commands.add(new DriveRotate(180.0));
 
     }
 
@@ -319,4 +341,47 @@ public class DriveTrain extends Subsystem {
     public boolean getToggleInverseDrive() {
         return toggleInverseDrive;
     }
+
+
+
+
+
+	public void resetEncoders() {
+		leftMaster.setSelectedSensorPosition(leftMaster.getDeviceID(), 0, 0);
+		rightMaster.setSelectedSensorPosition(rightMaster.getDeviceID(), 0, 0);
+    }
+    
+    private double minRpm(double inputRpm, double minRpm) {
+		double outputRpm = inputRpm;
+		if (Math.abs(inputRpm) < minRpm) {
+			if (outputRpm < 0) {
+				outputRpm = -minRpm;
+			} else if (outputRpm > 0) {
+				outputRpm = minRpm;
+			}
+		}
+		return outputRpm;
+	}
+
+    public boolean isTurnDone() {
+		if (turnController.onTarget()) {
+			turnOnTargets++;
+		}
+		return (turnOnTargets > 0);
+	}
+
+	public void startTurn(double turn) {
+		turnOnTargets = 0;
+		turnController.reset();
+		navx.reset();
+		//resetEncoders();
+		turnController.setSetpoint(turn);
+		turnController.enable();
+    }
+    
+    public void stopTurn() {
+		turnController.reset();
+		leftMaster.set(0);
+		rightMaster.set(0);
+	}
 }
