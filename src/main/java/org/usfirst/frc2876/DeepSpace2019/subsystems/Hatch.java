@@ -85,10 +85,10 @@ public class Hatch extends Subsystem {
         master.configPeakOutputReverse(-.8);
 
         if (Robot.robotSettings.isCompBot()) {
-            TOP = 700;
-            PICKUP = 100;
-            CARRY = 200;
-            BOTTOM = -33;
+            TOP = 0;
+            CARRY = -550;
+            PICKUP = -700;
+            BOTTOM = -736;
         } else {
             TOP = -300;
             BOTTOM = -1600;

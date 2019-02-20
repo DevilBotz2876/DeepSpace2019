@@ -89,16 +89,16 @@ public class OI {
 
         
         bButton = new JoystickButton(xboxController, B_BUTTON);
-        bButton.whenPressed(new HatchPosition(Robot.hatch.TOP));
+        bButton.whenPressed(new HatchPosition(Robot.hatch.CARRY));
 
         aButton = new JoystickButton(xboxController, A_BUTTON);
-        aButton.whenPressed(new HatchPosition(Robot.hatch.BOTTOM));
+        aButton.whenPressed(new HatchPosition(Robot.hatch.PICKUP));
 
         yButton = new JoystickButton(xboxController, Y_BUTTON);
-        yButton.whileHeld(new ArmUp());
+        yButton.whileHeld(new HatchPosition(Robot.hatch.TOP));
 
         xButton = new JoystickButton(xboxController, X_BUTTON);
-        xButton.whileHeld(new ArmDown());
+        xButton.whileHeld(new HatchPosition(Robot.hatch.BOTTOM));
 
         leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
         leftBumper.whileHeld(new ScoopIn());
