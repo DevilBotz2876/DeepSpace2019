@@ -190,7 +190,8 @@ public class Arm extends Subsystem {
     }
 
     public double getPosition() {
-        return master.getSensorCollection().getPulseWidthPosition();
+        return master.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+        // return master.getSensorCollection().getPulseWidthPosition();
         // return master.getSelectedSensorPosition();
     }
 
