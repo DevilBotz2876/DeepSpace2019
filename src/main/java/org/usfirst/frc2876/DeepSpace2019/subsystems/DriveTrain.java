@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.cscore.UsbCamera;
 
 /**
  * 
@@ -46,6 +48,7 @@ public class DriveTrain extends Subsystem {
     public PIDController turnController;
     private int turnOnTargets;
     public AHRS navx;
+    public CameraServer server;
 
     private WPI_TalonSRX rightMaster;
     private WPI_TalonSRX leftMaster;
@@ -209,6 +212,15 @@ public class DriveTrain extends Subsystem {
         commands.add(new DriveRotate(180.0));
 
     }
+
+    public void initializeCamera(int camNum) {
+		server = CameraServer.getInstance();
+		// server.setQuality(50);
+		UsbCamera serverUsb = server.startAutomaticCapture("cam" + camNum, camNum);
+		serverUsb.setFPS(15);
+		serverUsb.setResolution(160, 120);
+
+	}
 
     @Override
     public void periodic() {

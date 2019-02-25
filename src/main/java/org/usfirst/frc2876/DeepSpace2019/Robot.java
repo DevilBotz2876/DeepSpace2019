@@ -73,6 +73,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(vision);
 
         SmartDashboard.putData(Scheduler.getInstance());
+
+        driveTrain.initializeCamera();
     }
 
     public void setupShuffleboard() {
@@ -115,9 +117,10 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null)
-            autonomousCommand.cancel();
+        if (autonomousCommand != null) autonomousCommand.cancel();
 
+        driveTrain.initializeCamera(0);
+        driveTrain.initializeCamera(1);
     }
 
     /**
