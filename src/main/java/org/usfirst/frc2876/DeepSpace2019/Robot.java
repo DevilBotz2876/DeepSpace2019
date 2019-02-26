@@ -118,8 +118,8 @@ public class Robot extends TimedRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
 
-        driveTrain.initializeCamera(0);
-        driveTrain.initializeCamera(1);
+        // driveTrain.initializeCamera(0);
+        // driveTrain.initializeCamera(1);
     }
 
     /**
