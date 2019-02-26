@@ -2,6 +2,8 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
+import javax.lang.model.util.ElementScanner6;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -216,10 +218,15 @@ public class DriveTrain extends Subsystem {
     public void initializeCamera(int camNum) {
 		server = CameraServer.getInstance();
 		// server.setQuality(50);
-		UsbCamera serverUsb = server.startAutomaticCapture("cam" + camNum, camNum);
-		serverUsb.setFPS(15);
-		serverUsb.setResolution(160, 120);
-
+        if (camNum == 0){
+            UsbCamera serverUsbScoop = server.startAutomaticCapture("Scoop Camera", camNum);
+            serverUsbScoop.setFPS(15);
+            serverUsbScoop.setResolution(160, 120);
+        }else{
+            UsbCamera serverUsbHatch = server.startAutomaticCapture("Hatch Camera", camNum);
+            serverUsbHatch.setFPS(15);
+            serverUsbHatch.setResolution(160, 120);
+        }
 	}
 
     @Override
