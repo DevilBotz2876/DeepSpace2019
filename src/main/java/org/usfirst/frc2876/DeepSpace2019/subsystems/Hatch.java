@@ -1,6 +1,5 @@
 package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
-import java.io.CharArrayReader;
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -14,6 +13,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.HatchPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchSliderPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
+import org.usfirst.frc2876.DeepSpace2019.commands.HatchZeroPosition;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -121,6 +121,8 @@ public class Hatch extends Subsystem {
         hatchCommands.add(new HatchDown());
         hatchCommands.add(new HatchStop());
         hatchCommands.add(new HatchSliderPosition());
+
+        hatchCommands.add(new HatchZeroPosition());
 
         tab.add("TOP", new HatchPosition(TOP));
         tab.add("BOT", new HatchPosition(BOTTOM));
