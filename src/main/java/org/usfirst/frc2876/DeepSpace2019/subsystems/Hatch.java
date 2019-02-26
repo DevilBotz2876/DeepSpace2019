@@ -90,8 +90,10 @@ public class Hatch extends Subsystem {
             PICKUP = -700;
             BOTTOM = -736;
         } else {
-            TOP = -300;
-            BOTTOM = -1600;
+            TOP = 0;
+            CARRY = -1200;
+            PICKUP = -1600;
+            BOTTOM = -1860;
         }
 
     }
