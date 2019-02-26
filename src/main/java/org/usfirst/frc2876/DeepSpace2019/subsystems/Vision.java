@@ -40,6 +40,7 @@ public class Vision extends Subsystem {
     private NetworkTableEntry nteDriveTrainLeft;
     private NetworkTableEntry nteIsPixyAlive;
     private NetworkTableEntry nteLinePID;
+    private NetworkTableEntry nteIsVectorFound;
 
     public Vision() {
         pixyHatch = new Pixy2("Hatch", 0x54);
@@ -55,10 +56,15 @@ public class Vision extends Subsystem {
         lineController.setInputRange(0, 78);
         // Set output less than max rpm so we don't try to turn too fast/hard to find
         // the line. Is this valid? Or is tuning PID better/right way?
-        //lineController.setOutputRange(-Robot.driveTrain.MAX_RPM * .5, Robot.driveTrain.MAX_RPM * .5);
+        // lineController.setOutputRange(-Robot.driveTrain.MAX_RPM * .5,
+        // Robot.driveTrain.MAX_RPM * .5);
+        lineController.setOutputRange(-.4, .4);
+
+        lineController.setContinuous(false);
+       
 
         // .5 is just a starting guess
-        lineController.setP(1.0);
+        lineController.setP(.1);
     }
 
     private class PixyOutput implements PIDOutput {
@@ -77,13 +83,17 @@ public class Vision extends Subsystem {
         double lastVectorPos;
         int errors;
         int noVectorsFound;
+        int vectorsFound;
+        int pixyDelay;
 
         public PixySource() {
             vectors = null;
             lastVectorId = -1;
-            lastVectorPos = 0.0;
+            lastVectorPos = -1.0;
             errors = 0;
             noVectorsFound = 0;
+            vectorsFound = 0;
+            pixyDelay = 0;
         }
 
         public String vectorStrings() {
@@ -93,6 +103,10 @@ public class Vision extends Subsystem {
             return "None";
         }
 
+        public boolean isVectorPresent() {
+            return vectors != null;
+        }
+
         public void setPIDSourceType(PIDSourceType pidSource) {
         }
 
@@ -100,21 +114,39 @@ public class Vision extends Subsystem {
             return PIDSourceType.kDisplacement;
         }
 
+        public double pidGet2() {
+//            periodicLoopCounter++;
+            if (periodicLoopCounter % 10 == 0) {
+                System.out.println("pixyDelay=" + periodicLoopCounter);
+                return lastVectorPos;
+            }
+//            System.out.println("p=" + periodicLoopCounter);
+            return 31.0;
+        }
         public double pidGet() {
-
+            pixyDelay++;
+            if (pixyDelay % 5 != 0) {
+                return lastVectorPos;
+            }
+            //System.out.println("pixyDelay=" + pixyDelay);
             try {
                 vectors = pixyHatch.getVectors();
             } catch (Pixy2Exception e) {
                 // System.out.println(e);
                 // e.printStackTrace();
                 errors++;
+                if (vectorsFound != 0) {
+                    System.out.println("Vision: vectorsFound=" + vectorsFound);
+                    vectorsFound = 0;
+                }
                 // TODO should we return last vector found?
-                return 0;
+                return lastVectorPos;
             }
             if (errors != 0) {
                 System.out.println("Vision: errors=" + errors);
                 errors = 0;
             }
+
             // TODO:
             //
             // index can change as pixy moves around. To track the same line need to look
@@ -134,14 +166,17 @@ public class Vision extends Subsystem {
                             System.out.println("Vision: noVectorsFound=" + noVectorsFound);
                             noVectorsFound = 0;
                         }
+                        vectorsFound++;
                         // x1 is the head/arrow end of the vector found by pixy2.
-                        lastVectorPos = vectors[i].m_x1;
+                        lastVectorPos = vectors[i].m_x0;
                         return lastVectorPos;
                     }
                     lastVectorId = vectors[i].m_index;
                 }
             }
             noVectorsFound++;
+            // System.out.println("Vision: noVectorsFound=" + noVectorsFound);
+
             // TODO should we return last vector found?
             return 0;
         }
@@ -167,6 +202,7 @@ public class Vision extends Subsystem {
         nteDriveTrainLeft = tab.add("DTLeft", 0).getEntry();
         nteDriveTrainRight = tab.add("DTRight", 0).getEntry();
         nteIsPixyAlive = tab.add("IsPixyAlive", false).getEntry();
+        nteIsVectorFound = tab.add("IsVectorFound", false).getEntry();
         // nteLinePID = tab.add("LinePID", lineController).getEntry();
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
@@ -182,8 +218,13 @@ public class Vision extends Subsystem {
     }
 
     public boolean isPixyAlive() {
-        Pixy2Version v = pixyHatch.version();
-        return v.get();
+        //Pixy2Version v = pixyHatch.version();
+        //return v.get();
+        return true;
+    }
+
+    public boolean isVectorPresent() {
+        return pixySource.isVectorPresent();
     }
 
     @Override
@@ -206,6 +247,7 @@ public class Vision extends Subsystem {
         // }
         // }
         if (lineController.isEnabled()) {
+            nteIsVectorFound.setBoolean(isVectorPresent());
             nteVectors.setString(pixySource.vectorStrings());
             ntePidError.setDouble(lineController.getError());
             ntePidSetpoint.setDouble(lineController.getSetpoint());
