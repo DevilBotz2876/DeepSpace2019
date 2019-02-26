@@ -2,6 +2,8 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
+import javax.lang.model.util.ElementScanner6;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -31,6 +33,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.cscore.UsbCamera;
 
 /**
  * 
@@ -46,6 +50,7 @@ public class DriveTrain extends Subsystem {
     public PIDController turnController;
     private int turnOnTargets;
     public AHRS navx;
+    public CameraServer server;
 
     private WPI_TalonSRX rightMaster;
     private WPI_TalonSRX leftMaster;
@@ -209,6 +214,20 @@ public class DriveTrain extends Subsystem {
         commands.add(new DriveRotate(180.0));
 
     }
+
+    public void initializeCamera(int camNum) {
+		server = CameraServer.getInstance();
+		// server.setQuality(50);
+        if (camNum == 0){
+            UsbCamera serverUsbScoop = server.startAutomaticCapture("Scoop Camera", camNum);
+            serverUsbScoop.setFPS(15);
+            serverUsbScoop.setResolution(160, 120);
+        }else{
+            UsbCamera serverUsbHatch = server.startAutomaticCapture("Hatch Camera", camNum);
+            serverUsbHatch.setFPS(15);
+            serverUsbHatch.setResolution(160, 120);
+        }
+	}
 
     @Override
     public void periodic() {
