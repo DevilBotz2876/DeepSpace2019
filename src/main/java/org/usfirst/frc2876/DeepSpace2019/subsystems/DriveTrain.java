@@ -88,7 +88,7 @@ public class DriveTrain extends Subsystem {
     private Ramp rampArcadeRotate;
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
-    private double defaultRamp = .1;
+    private double defaultRamp = 1;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
@@ -271,7 +271,7 @@ public class DriveTrain extends Subsystem {
 
         // This reads slider on dash and changes ramp rate. Should be removed once we
         // find a a good rate for driving.
-        updateRamps();
+        //updateRamps();
 
         double leftRPM, rightRPM;
 
@@ -281,6 +281,13 @@ public class DriveTrain extends Subsystem {
         }
         if (Math.abs(rotate) < .09) {
             rotate = 0.0;
+        }
+
+        double MAX_ROTATE = .8;
+        if (rotate > MAX_ROTATE) {
+            rotate = MAX_ROTATE;
+        } else if (rotate < -MAX_ROTATE) {
+            rotate = -MAX_ROTATE;
         }
 
         speed = adjustJoystickSensitivity(speed);
@@ -314,6 +321,7 @@ public class DriveTrain extends Subsystem {
                 rightRPM = -Math.max(-speed, -rotate);
             }
         }
+
         // Turn -1..1 value into RPMs
         leftRPM *= MAX_RPM;
         rightRPM *= MAX_RPM;
