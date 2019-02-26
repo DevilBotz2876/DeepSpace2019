@@ -74,7 +74,6 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(Scheduler.getInstance());
 
-        driveTrain.initializeCamera();
     }
 
     public void setupShuffleboard() {
