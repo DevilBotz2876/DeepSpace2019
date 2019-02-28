@@ -2,8 +2,6 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
-import javax.lang.model.util.ElementScanner6;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -14,6 +12,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
+import org.usfirst.frc2876.DeepSpace2019.commands.ClimberDeploy;
+import org.usfirst.frc2876.DeepSpace2019.commands.ClimberRetract;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveReverse;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveRotate;
@@ -22,7 +22,10 @@ import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -33,8 +36,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.cscore.UsbCamera;
 
 /**
  * 
@@ -62,6 +63,8 @@ public class DriveTrain extends Subsystem {
 
     private boolean toggleInverseDrive = false;
     private boolean toggleHelp;
+
+    private DoubleSolenoid climberSolenoid = new DoubleSolenoid(0, 1);
 
     // Calculated this following instructions here:
     // https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#confirm-sensor-resolution-velocity
@@ -213,6 +216,10 @@ public class DriveTrain extends Subsystem {
 
         commands.add(new DriveRotate(180.0));
 
+        ShuffleboardLayout climberCommands = tab.getLayout("Climber", BuiltInLayouts.kList).withSize(7, 10)
+        .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
+        climberCommands.add(new ClimberDeploy());
+        climberCommands.add(new ClimberRetract());
     }
 
     public void initializeCamera(int camNum) {
@@ -410,5 +417,14 @@ public class DriveTrain extends Subsystem {
 		turnController.reset();
 		leftMaster.set(0);
 		rightMaster.set(0);
-	}
+    }
+    
+    public void climberDeploy() {
+        climberSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void climberRetract() {
+        climberSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
 }
