@@ -2,8 +2,6 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
-import javax.lang.model.util.ElementScanner6;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -22,7 +20,10 @@ import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
-import edu.wpi.first.cameraserver.CameraServerShared;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -35,10 +36,6 @@ import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
-import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 
 /**
  * 
@@ -244,8 +241,8 @@ public class DriveTrain extends Subsystem {
     public void initializeCameras() {
         scoopCamera = CameraServer.getInstance().startAutomaticCapture("Scoop Camera", 0);
         // hatchCamera = CameraServer.getInstance().startAutomaticCapture("Hatch Camera", 1);
-        server = CameraServer.getInstance().getServer();
-        server = CameraServer.getInstance().addSwitchedCamera();
+        //server = CameraServer.getInstance().getServer();
+        server = CameraServer.getInstance().addSwitchedCamera("");
         scoopCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
         // hatchCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
