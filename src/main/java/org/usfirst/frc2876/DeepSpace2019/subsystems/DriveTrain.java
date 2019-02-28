@@ -22,6 +22,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
+import edu.wpi.first.cameraserver.CameraServerShared;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -30,11 +31,14 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 
 /**
  * 
@@ -50,7 +54,10 @@ public class DriveTrain extends Subsystem {
     public PIDController turnController;
     private int turnOnTargets;
     public AHRS navx;
-    public CameraServer server;
+
+    public UsbCamera scoopCamera;
+    public UsbCamera hatchCamera;
+    public VideoSink server;
 
     private WPI_TalonSRX rightMaster;
     private WPI_TalonSRX leftMaster;
@@ -180,6 +187,8 @@ public class DriveTrain extends Subsystem {
         turnController.setPercentTolerance(10.0);
         turnController.setInputRange(0.0, 360.0);
         turnController.setOutputRange(-0.5, 0.5);
+
+        initializeCameras();
     }
 
     @Override
@@ -213,20 +222,37 @@ public class DriveTrain extends Subsystem {
 
         commands.add(new DriveRotate(180.0));
 
+        tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
+
     }
 
-    public void initializeCamera(int camNum) {
-		server = CameraServer.getInstance();
-		// server.setQuality(50);
-        if (camNum == 0){
-            UsbCamera serverUsbScoop = server.startAutomaticCapture("Scoop Camera", camNum);
-            serverUsbScoop.setFPS(15);
-            serverUsbScoop.setResolution(160, 120);
-        }else{
-            UsbCamera serverUsbHatch = server.startAutomaticCapture("Hatch Camera", camNum);
-            serverUsbHatch.setFPS(15);
-            serverUsbHatch.setResolution(160, 120);
-        }
+    // public void initializeCamera(int camNum) {
+	// 	server = CameraServer.getInstance();
+	// 	// server.setQuality(50);
+    //     if (camNum == 0){
+    //         UsbCamera serverUsbScoop = server.startAutomaticCapture("Scoop Camera", camNum);
+    //         server.setConnectionSt
+    //         serverUsbScoop.setFPS(15);
+    //         serverUsbScoop.setResolution(160, 120);
+    //     }else{
+    //         UsbCamera serverUsbHatch = server.startAutomaticCapture("Hatch Camera", camNum);
+    //         serverUsbHatch.setFPS(15);
+    //         serverUsbHatch.setResolution(160, 120);
+    //     }
+    // }
+    
+    public void initializeCameras() {
+        scoopCamera = CameraServer.getInstance().startAutomaticCapture("Scoop Camera", 0);
+        // hatchCamera = CameraServer.getInstance().startAutomaticCapture("Hatch Camera", 1);
+        server = CameraServer.getInstance().getServer();
+        server = CameraServer.getInstance().addSwitchedCamera();
+        scoopCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+        // hatchCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+
+        scoopCamera.setFPS(15);
+        scoopCamera.setResolution(160, 120);
+        // hatchCamera.setFPS(15);
+        // hatchCamera.setResolution(160, 120);
 	}
 
     @Override

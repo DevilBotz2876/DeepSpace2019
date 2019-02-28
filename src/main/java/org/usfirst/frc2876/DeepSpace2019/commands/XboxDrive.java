@@ -38,8 +38,10 @@ public class XboxDrive extends Command {
         // - Give get func clearer name, don't include action/verb in get function name
         if (!Robot.driveTrain.getToggleInverseDrive()) {
             Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
+            Robot.driveTrain.server.setSource(Robot.driveTrain.scoopCamera);
         } else {
             Robot.driveTrain.setVelocityArcadeJoysticks(xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
+            // Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
         }
     }
 
