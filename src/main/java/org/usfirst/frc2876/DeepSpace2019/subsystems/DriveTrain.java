@@ -242,7 +242,7 @@ public class DriveTrain extends Subsystem {
         scoopCamera = CameraServer.getInstance().startAutomaticCapture("Scoop Camera", 0);
         // hatchCamera = CameraServer.getInstance().startAutomaticCapture("Hatch Camera", 1);
         //server = CameraServer.getInstance().getServer();
-        server = CameraServer.getInstance().addSwitchedCamera("");
+        server = CameraServer.getInstance().addSwitchedCamera("Toggle Camera");
         scoopCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
         // hatchCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
