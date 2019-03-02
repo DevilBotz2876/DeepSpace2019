@@ -69,7 +69,7 @@ public class Hatch extends Subsystem {
         // defaults.
 
         // TODO set this to value we figure out using phoenix tool
-        allConfigs.slot0.kP = 1;
+        // allConfigs.slot0.kP = 1;
 
         // TODO what other config settings were made in phoenix tool that we should set
         // here?
@@ -89,11 +89,13 @@ public class Hatch extends Subsystem {
             CARRY = -550;
             PICKUP = -700;
             BOTTOM = -736;
+            allConfigs.slot0.kP = 1;
         } else {
             TOP = 0;
-            CARRY = -1200;
-            PICKUP = -1600;
-            BOTTOM = -1860;
+            CARRY = -1100;
+            PICKUP = -1400;
+            BOTTOM = -1550;
+            allConfigs.slot0.kP = 4;
         }
 
     }
