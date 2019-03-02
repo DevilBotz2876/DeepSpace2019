@@ -240,17 +240,20 @@ public class DriveTrain extends Subsystem {
     
     public void initializeCameras() {
         scoopCamera = CameraServer.getInstance().startAutomaticCapture("Scoop Camera", 0);
-        // hatchCamera = CameraServer.getInstance().startAutomaticCapture("Hatch Camera", 1);
-        //server = CameraServer.getInstance().getServer();
+        hatchCamera = CameraServer.getInstance().startAutomaticCapture("Hatch Camera", 1);
         server = CameraServer.getInstance().addSwitchedCamera("Toggle Camera");
         scoopCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-        // hatchCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+        hatchCamera.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
         scoopCamera.setFPS(15);
         scoopCamera.setResolution(160, 120);
-        // hatchCamera.setFPS(15);
-        // hatchCamera.setResolution(160, 120);
-	}
+        hatchCamera.setFPS(15);
+        hatchCamera.setResolution(160, 120);
+    }
+    
+    public void getCameraSource(){
+        server.getSource();
+    }
 
     @Override
     public void periodic() {

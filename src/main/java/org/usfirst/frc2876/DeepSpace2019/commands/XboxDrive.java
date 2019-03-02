@@ -5,6 +5,10 @@ import org.usfirst.frc2876.DeepSpace2019.Robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 
 /**
  *
@@ -36,12 +40,13 @@ public class XboxDrive extends Command {
         // Create temp var to store the speed and rotate values and negate appropriately
         // inside if/else block
         // - Give get func clearer name, don't include action/verb in get function name
+        Robot.driveTrain.getCameraSource();
         if (!Robot.driveTrain.getToggleInverseDrive()) {
             Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
             Robot.driveTrain.server.setSource(Robot.driveTrain.scoopCamera);
         } else {
             Robot.driveTrain.setVelocityArcadeJoysticks(xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
-            // Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
+            Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
         }
     }
 
