@@ -16,6 +16,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveReverse;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveRotate;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveStop;
+import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
 import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
@@ -32,6 +33,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -97,6 +99,7 @@ public class DriveTrain extends Subsystem {
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
     private NetworkTableEntry nteMotorOutput;
+    private NetworkTableEntry nteInverseDriveToggle;
 
     // TODO Declare navx
 
@@ -209,6 +212,8 @@ public class DriveTrain extends Subsystem {
                 .withSize(2, 1).getEntry();
 
         nteMotorOutput = tab.add("RPM", 0).withSize(4, 4).getEntry();
+        nteInverseDriveToggle = tab.add("Start Direction Hatch", true)
+        .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
                 .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
@@ -218,6 +223,8 @@ public class DriveTrain extends Subsystem {
         commands.add(new DriveReverse());
 
         commands.add(new DriveRotate(180.0));
+
+        commands.add(new ToggleInverseDrive());
 
         tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
 
@@ -271,6 +278,10 @@ public class DriveTrain extends Subsystem {
         rampTankRight.setMaxChangePerSecond(MAX_RPM * r);
     }
 
+    private void updateDirection(){
+        toggleInverseDrive = nteInverseDriveToggle.getBoolean(toggleInverseDrive);
+    }
+
     public void arcadeDrive(double xSpeed, double zRotation) {
         differentialDrive.arcadeDrive(xSpeed, zRotation);
     }
@@ -298,6 +309,7 @@ public class DriveTrain extends Subsystem {
         // This reads slider on dash and changes ramp rate. Should be removed once we
         // find a a good rate for driving.
         //updateRamps();
+        updateDirection();
 
         double leftRPM, rightRPM;
 
