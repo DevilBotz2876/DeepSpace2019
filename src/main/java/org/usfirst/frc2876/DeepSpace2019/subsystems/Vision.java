@@ -7,6 +7,7 @@ import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Exception;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Vector;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Version;
+import org.usfirst.frc2876.DeepSpace2019.commands.PixyDriveAssist;
 import org.usfirst.frc2876.DeepSpace2019.commands.PixyLine;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -209,6 +210,7 @@ public class Vision extends Subsystem {
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
                 .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
         commands.add(new PixyLine());
+        commands.add(new PixyDriveAssist());
 
     }
 
