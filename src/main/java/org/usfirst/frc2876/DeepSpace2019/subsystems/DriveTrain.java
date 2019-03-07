@@ -212,7 +212,7 @@ public class DriveTrain extends Subsystem {
                 .withSize(2, 1).getEntry();
 
         nteMotorOutput = tab.add("RPM", 0).withSize(4, 4).getEntry();
-        nteInverseDriveToggle = tab.add("Start Direction Hatch", true)
+        nteInverseDriveToggle = tab.add("Hatch-Side Forward", true)
         .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
