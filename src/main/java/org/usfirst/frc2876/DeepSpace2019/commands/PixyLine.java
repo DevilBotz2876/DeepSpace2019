@@ -16,6 +16,7 @@ public class PixyLine extends Command {
   @Override
   protected void initialize() {
     // Robot.vision.lineController.setAbsoluteTolerance(10);
+    Robot.vision.update();
     Robot.vision.lineController.reset();
     Robot.vision.lineController.setSetpoint(39);
     Robot.vision.lineController.enable();
@@ -26,9 +27,6 @@ public class PixyLine extends Command {
   protected void execute() {
     double out = Robot.vision.lineController.get();
     double baseVelocity = 0;// Robot.driveTrain.MAX_RPM*.3;
-    // TODO double check the signs are correct.
-    // Robot.driveTrain.velocityTankDrive(baseVelocity-out, baseVelocity+out);
-    Robot.vision.updateShuffleDrivetrainOutputs(baseVelocity - out, baseVelocity + out);
 
     XboxController xbox = Robot.oi.getXboxController();
     double speed = xbox.getY(Hand.kLeft);
@@ -36,22 +34,31 @@ public class PixyLine extends Command {
 
     // Only apply steering correction if we see a line and are moving forward.
     if (Math.abs(speed) > .1 && Robot.vision.isVectorPresent()) {
-      rotate -= out;
+      rotate = out;
     }
     // if robot is to the left of the line and coming in at sharp off angle you get
-    // vector like: (32 14) (69 29)  xdiff=-37 ydiff=-15
+    // vector like: (32 14) (69 29) xdiff=-37 ydiff=-15
 
     // if robot is to the right of the line and coming in at sharp off angle you get
     // vector like: (13 42) (50 21) xdiff=-37 ydiff=21
 
-    double MAX_PIXY_SPEED = .3;
+    double MAX_PIXY_SPEED = .25;
+    double MAX_NO_PIXY_SPEED = .4;
     if (Robot.vision.isVectorPresent()) {
       if (speed > MAX_PIXY_SPEED) {
         speed = MAX_PIXY_SPEED;
       } else if (speed < -MAX_PIXY_SPEED) {
         speed = -MAX_PIXY_SPEED;
       }
+    } else {
+      if (speed > MAX_NO_PIXY_SPEED) {
+        speed = MAX_NO_PIXY_SPEED;
+      } else if (speed < -MAX_NO_PIXY_SPEED) {
+        speed = -MAX_NO_PIXY_SPEED;
+      }
     }
+    Robot.vision.updateShuffleDrivetrainOutputs(speed, rotate);
+
     Robot.driveTrain.setVelocityArcadeJoysticks(speed, rotate);
 
   }
@@ -59,9 +66,7 @@ public class PixyLine extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    // TODO probably should also check that we haven't hit the wall of rocket or
-    // cargo ship as well.
-    // return Robot.vision.lineController.onTarget();
+
     return false;
   }
 

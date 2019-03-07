@@ -2,7 +2,6 @@ package org.usfirst.frc2876.DeepSpace2019.subsystems;
 
 import java.util.Map;
 
-import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Exception;
 import org.usfirst.frc2876.DeepSpace2019.Pixy2.Pixy2Vector;
@@ -11,6 +10,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.PixyDriveAssist;
 import org.usfirst.frc2876.DeepSpace2019.commands.PixyLine;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -37,11 +37,13 @@ public class Vision extends Subsystem {
     private NetworkTableEntry ntePidError;
     private NetworkTableEntry ntePidSetpoint;
     private NetworkTableEntry ntePidOutput;
-    private NetworkTableEntry nteDriveTrainRight;
-    private NetworkTableEntry nteDriveTrainLeft;
+    private NetworkTableEntry nteSpeed;
+    private NetworkTableEntry nteRotate;
     private NetworkTableEntry nteIsPixyAlive;
     private NetworkTableEntry nteLinePID;
     private NetworkTableEntry nteIsVectorFound;
+
+    private Preferences prefs;
 
     public Vision() {
         pixyHatch = new Pixy2("Hatch", 0x54);
@@ -62,10 +64,24 @@ public class Vision extends Subsystem {
         lineController.setOutputRange(-.4, .4);
 
         lineController.setContinuous(false);
-       
 
-        // .5 is just a starting guess
-        lineController.setP(.1);
+        prefs = Preferences.getInstance();
+
+        if (!prefs.containsKey("VisionPID_P")) {
+            prefs.putDouble("VisionPID_P", .05);
+        }
+         if (!prefs.containsKey("VisionPID_D")) {
+            prefs.putDouble("VisionPID_D", .0);
+        }
+        lineController.setP(prefs.getDouble("VisionPID_P", .05));
+        lineController.setD(prefs.getDouble("VisionPID_D", .0));
+        // lineController.setP(.1);
+        // lineController.setD(.001);
+    }
+
+    public void update() {
+        lineController.setP(prefs.getDouble("VisionPID_P", .1));
+        lineController.setD(prefs.getDouble("VisionPID_D", .0));
     }
 
     private class PixyOutput implements PIDOutput {
@@ -115,21 +131,12 @@ public class Vision extends Subsystem {
             return PIDSourceType.kDisplacement;
         }
 
-        public double pidGet2() {
-//            periodicLoopCounter++;
-            if (periodicLoopCounter % 10 == 0) {
-                System.out.println("pixyDelay=" + periodicLoopCounter);
-                return lastVectorPos;
-            }
-//            System.out.println("p=" + periodicLoopCounter);
-            return 31.0;
-        }
         public double pidGet() {
             pixyDelay++;
             if (pixyDelay % 5 != 0) {
                 return lastVectorPos;
             }
-            //System.out.println("pixyDelay=" + pixyDelay);
+            // System.out.println("pixyDelay=" + pixyDelay);
             try {
                 vectors = pixyHatch.getVectors();
             } catch (Pixy2Exception e) {
@@ -194,35 +201,46 @@ public class Vision extends Subsystem {
 
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021941-using-tabs
         // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021942-sending-data
-        // nteLimit = tab.add("HatchLimit", limit.get()).getEntry();
-        nteVectors = tab.add("Vectors", pixySource.vectorStrings()).getEntry();
 
-        ntePidError = tab.add("LinePIDError", lineController.getError()).getEntry();
-        ntePidSetpoint = tab.add("LinePIDSetpoint", lineController.getSetpoint()).getEntry();
-        ntePidOutput = tab.add("LinePIDOutput", lineController.get()).getEntry();
-        nteDriveTrainLeft = tab.add("DTLeft", 0).getEntry();
-        nteDriveTrainRight = tab.add("DTRight", 0).getEntry();
-        nteIsPixyAlive = tab.add("IsPixyAlive", false).getEntry();
-        nteIsVectorFound = tab.add("IsVectorFound", false).getEntry();
-        // nteLinePID = tab.add("LinePID", lineController).getEntry();
+        nteIsPixyAlive = tab.add("IsPixyAlive", false).withSize(6, 6).withPosition(0, 0).getEntry();
 
-        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
-        ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(2, 3)
+        ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 6).withPosition(6, 0)
                 .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
         commands.add(new PixyLine());
         commands.add(new PixyDriveAssist());
 
+        nteIsVectorFound = tab.add("IsVectorFound", false).withSize(6, 6).withPosition(12, 0).getEntry();
+
+        nteVectors = tab.add("Vectors", pixySource.vectorStrings()).withSize(12, 6).withPosition(18, 0).getEntry();
+
+        int row2Y = 7;
+        int boxYSize = 3;
+        int boxXSize = 6;
+        int row3Y = row2Y + boxYSize;
+        int row4Y = row3Y + boxYSize;
+        ntePidError = tab.add("LinePIDError", lineController.getError()).withSize(boxXSize, boxYSize)
+                .withPosition(0, row2Y).getEntry();
+        ntePidSetpoint = tab.add("LinePIDSetpoint", lineController.getSetpoint()).withSize(boxXSize, boxYSize)
+                .withPosition(0, row3Y).getEntry();
+        ntePidOutput = tab.add("LinePIDOutput", lineController.get()).withSize(boxXSize, boxYSize)
+                .withPosition(0, row4Y).getEntry();
+
+        nteSpeed = tab.add("DTSpeed", 0).withSize(boxXSize, boxYSize).withPosition(boxXSize, row2Y).getEntry();
+        nteRotate = tab.add("DTRotate", 0).withSize(boxXSize, boxYSize).withPosition(boxXSize, row3Y).getEntry();
+
+        // https://wpilib.screenstepslive.com/s/currentCS/m/shuffleboard/l/1021980-organizing-widgets
+
     }
 
-    public void updateShuffleDrivetrainOutputs(double left, double right) {
-        nteDriveTrainLeft.setDouble(left);
-        nteDriveTrainRight.setDouble(right);
+    public void updateShuffleDrivetrainOutputs(double speed, double rotate) {
+        nteSpeed.setDouble(speed);
+        nteRotate.setDouble(rotate);
     }
 
     public boolean isPixyAlive() {
-        //Pixy2Version v = pixyHatch.version();
-        //return v.get();
-        return true;
+        Pixy2Version v = pixyHatch.version();
+        return v.get();
+        // return true;
     }
 
     public boolean isVectorPresent() {
@@ -233,21 +251,6 @@ public class Vision extends Subsystem {
     public void periodic() {
         // Put code here to be run every loop
 
-        // if (periodicLoopCounter % 1000 == 0) {
-        // Pixy2Vector[] vectors = null;
-        // try {
-        // vectors = pixyHatch.getVectors();
-
-        // } catch (Pixy2Exception e) {
-        // System.out.println(e);
-        // e.printStackTrace();
-        // }
-        // if (vectors != null) {
-        // for (int i = 0; i < vectors.length; i++) {
-        // System.out.println(i + " " + vectors[i]);
-        // }
-        // }
-        // }
         if (lineController.isEnabled()) {
             nteIsVectorFound.setBoolean(isVectorPresent());
             nteVectors.setString(pixySource.vectorStrings());
