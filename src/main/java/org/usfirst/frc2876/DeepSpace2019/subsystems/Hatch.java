@@ -92,7 +92,7 @@ public class Hatch extends Subsystem {
             allConfigs.slot0.kP = 1;
         } else {
             TOP = 0;
-            CARRY = -1100;
+            CARRY = -800;
             PICKUP = -1400;
             BOTTOM = -1550;
             allConfigs.slot0.kP = 4;

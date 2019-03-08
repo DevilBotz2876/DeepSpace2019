@@ -7,6 +7,8 @@ import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
+import org.usfirst.frc2876.DeepSpace2019.commands.PixyDriveAssist;
+import org.usfirst.frc2876.DeepSpace2019.commands.PixyLine;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopIn;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
@@ -97,8 +99,11 @@ public class OI {
         yButton = new JoystickButton(xboxController, Y_BUTTON);
         yButton.whileHeld(new HatchPosition(Robot.hatch.TOP));
 
+        // xButton = new JoystickButton(xboxController, X_BUTTON);
+        // xButton.whileHeld(new HatchPosition(Robot.hatch.BOTTOM));
+
         xButton = new JoystickButton(xboxController, X_BUTTON);
-        xButton.whileHeld(new HatchPosition(Robot.hatch.BOTTOM));
+        xButton.whileHeld(new PixyDriveAssist());
 
         leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
         leftBumper.whileHeld(new ScoopIn());

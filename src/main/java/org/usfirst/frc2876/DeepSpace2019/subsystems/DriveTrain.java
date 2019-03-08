@@ -101,6 +101,8 @@ public class DriveTrain extends Subsystem {
     private NetworkTableEntry nteMotorOutput;
     private NetworkTableEntry nteInverseDriveToggle;
 
+    private ShuffleboardTab driveTeamTab;
+
     // TODO Declare navx
 
     public DriveTrain() {
@@ -227,6 +229,12 @@ public class DriveTrain extends Subsystem {
         commands.add(new ToggleInverseDrive());
 
         tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
+
+        // DRIVE TEAM COMMANDS START
+        driveTeamTab = Shuffleboard.getTab("DriveTeam");
+
+
+
 
     }
 
