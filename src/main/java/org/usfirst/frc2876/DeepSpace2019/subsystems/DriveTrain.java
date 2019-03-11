@@ -420,11 +420,11 @@ public class DriveTrain extends Subsystem {
     }
     
     public void climberDeploy() {
-        climberSolenoid.set(DoubleSolenoid.Value.kForward);
+        climberSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
     public void climberRetract() {
-        climberSolenoid.set(DoubleSolenoid.Value.kReverse);
+        climberSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
 }
