@@ -101,7 +101,7 @@ public class DriveTrain extends Subsystem {
     private NetworkTableEntry nteMotorOutput;
     private NetworkTableEntry nteInverseDriveToggle;
 
-    private ShuffleboardTab driveTeamTab;
+    
 
     // TODO Declare navx
 
@@ -230,28 +230,7 @@ public class DriveTrain extends Subsystem {
 
         tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
 
-        // DRIVE TEAM COMMANDS START
-        driveTeamTab = Shuffleboard.getTab("DriveTeam");
-
-
-
-
     }
-
-    // public void initializeCamera(int camNum) {
-	// 	server = CameraServer.getInstance();
-	// 	// server.setQuality(50);
-    //     if (camNum == 0){
-    //         UsbCamera serverUsbScoop = server.startAutomaticCapture("Scoop Camera", camNum);
-    //         server.setConnectionSt
-    //         serverUsbScoop.setFPS(15);
-    //         serverUsbScoop.setResolution(160, 120);
-    //     }else{
-    //         UsbCamera serverUsbHatch = server.startAutomaticCapture("Hatch Camera", camNum);
-    //         serverUsbHatch.setFPS(15);
-    //         serverUsbHatch.setResolution(160, 120);
-    //     }
-    // }
     
     public void initializeCameras() {
         scoopCamera = CameraServer.getInstance().startAutomaticCapture("Scoop Camera", 0);

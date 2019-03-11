@@ -6,6 +6,7 @@ import org.usfirst.frc2876.DeepSpace2019.subsystems.DriveTrain;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Hatch;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Scoop;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Vision;
+import org.usfirst.frc2876.DeepSpace2019.utils.DriverShuffleboardTab;
 import org.usfirst.frc2876.DeepSpace2019.utils.RobotSettings;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
     public static Scoop scoop;
     public static Hatch hatch;
     public static Vision vision;
+    public static DriverShuffleboardTab driverTab;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -50,6 +52,7 @@ public class Robot extends TimedRobot {
         scoop = new Scoop();
         hatch = new Hatch();
         vision = new Vision();
+        driverTab = new DriverShuffleboardTab(); 
 
         // OI must be constructed after subsystems. If the OI creates Commands
         // (which it very likely will), subsystems are not guaranteed to be
@@ -73,6 +76,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(vision);
 
         SmartDashboard.putData(Scheduler.getInstance());
+
+        driverTab.setup();
 
     }
 
