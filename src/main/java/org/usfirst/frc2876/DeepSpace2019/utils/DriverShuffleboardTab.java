@@ -36,27 +36,31 @@ public class DriverShuffleboardTab {
         driveTeamTab = Shuffleboard.getTab("DriveTeam");
 
         // Camera
-        driveTeamTab.add("Camera", SendableCameraWrapper.wrap(Robot.driveTrain.server.getSource()));
+        driveTeamTab.add("Camera", SendableCameraWrapper.wrap(Robot.driveTrain.server.getSource()))
+        .withSize(17, 21).withPosition(0, 0);
 
         // Gyro
 
         // Auto Leave Platform
         //I CHANGED NAME TO "Auto Leave Platform"
-        driveTeamTab.add("Auto Leave Platform", new CGDriveOffPlatform());
+        driveTeamTab.add("Auto Leave Platform", new CGDriveOffPlatform())
+        .withSize(7, 3).withPosition(17, 6);
 
         // Starting Position (Hatch-front or Cargo-front)
-        nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", true)
+        nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", true).withPosition(17, 12)
         .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
         // Is Vector Found
-        nteIsVectorFound = driveTeamTab.add("IsVectorFound", false).withSize(6, 6).withPosition(12, 0).getEntry();
+        nteIsVectorFound = driveTeamTab.add("IsVectorFound", false)
+        .withSize(7, 6).withPosition(17, 0).getEntry();
 
         // Arm (encoder position + set-point)
 
         // Zero Arm Pos
 
         // Hatch (encoder postion + set-point)
-        ntePIDSetpoint = driveTeamTab.add("HatchSetpoint", 0).withSize(5, 3).withPosition(0, 15).getEntry();
+        ntePIDSetpoint = driveTeamTab.add("HatchSetpoint", 0)
+        .withSize(7, 3).withPosition(17, 9).getEntry();
 
         // Zero Hatch Pos
 
