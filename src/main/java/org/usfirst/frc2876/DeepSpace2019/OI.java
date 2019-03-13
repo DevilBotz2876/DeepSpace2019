@@ -106,10 +106,10 @@ public class OI {
         xButton.whileHeld(new PixyDriveAssist());
 
         leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
-        leftBumper.whileHeld(new ScoopIn());
+        leftBumper.whileHeld(new ScoopOut());
 
         rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
-        rightBumper.whileHeld(new ScoopOut());
+        rightBumper.whileHeld(new ScoopIn());
 
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
         selectButton.whenPressed(new ToggleInverseDrive());
