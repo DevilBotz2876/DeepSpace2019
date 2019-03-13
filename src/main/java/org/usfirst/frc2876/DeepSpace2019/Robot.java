@@ -78,6 +78,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(Scheduler.getInstance());
 
         driverTab.setup();
+        driverTab.setupSecond();
 
     }
 
