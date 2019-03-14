@@ -172,7 +172,10 @@ public class Hatch extends Subsystem {
     }
 
     public double getSetpoint() {
-        return master.getClosedLoopTarget();
+        if (master.getControlMode() == ControlMode.Position) {
+            return master.getClosedLoopTarget(0);
+        }
+        return 0;
     }
 
     public void resetPosition() {
