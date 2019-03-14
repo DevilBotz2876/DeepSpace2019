@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        driverTab.periodic();
         Scheduler.getInstance().run();
     }
 
@@ -113,6 +114,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        driverTab.periodic();
         Scheduler.getInstance().run();
     }
 
@@ -134,6 +136,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        driverTab.periodic();
         Scheduler.getInstance().run();
         
     }
