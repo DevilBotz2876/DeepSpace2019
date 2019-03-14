@@ -86,9 +86,9 @@ public class Hatch extends Subsystem {
 
         if (Robot.robotSettings.isCompBot()) {
             TOP = 0;
-            CARRY = -550;
-            PICKUP = -700;
-            BOTTOM = -736;
+            CARRY = -390;
+            PICKUP = -600;
+            BOTTOM = -650;
             allConfigs.slot0.kP = 1;
         } else {
             TOP = 0;

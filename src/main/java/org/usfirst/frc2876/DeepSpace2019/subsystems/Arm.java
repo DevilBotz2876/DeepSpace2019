@@ -44,6 +44,7 @@ public class Arm extends Subsystem {
     public Arm() {
         talonSRX5 = new WPI_TalonSRX(5);
         talonSRX6 = new WPI_TalonSRX(6);
+        
 
         master = talonSRX5;
         follower = talonSRX6;
@@ -125,7 +126,7 @@ public class Arm extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new ArmIdle());
+        setDefaultCommand(new ArmStop());
     }
 
     public void setupShuffleboard() {

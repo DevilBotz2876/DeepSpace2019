@@ -18,7 +18,7 @@ public class PixyLine extends Command {
     // Robot.vision.lineController.setAbsoluteTolerance(10);
     Robot.vision.update();
     Robot.vision.lineController.reset();
-    Robot.vision.lineController.setSetpoint(39);
+    Robot.vision.lineController.setSetpoint(35);
     Robot.vision.lineController.enable();
   }
 
@@ -34,7 +34,7 @@ public class PixyLine extends Command {
 
     // Only apply steering correction if we see a line and are moving forward.
     if (Math.abs(speed) > .1 && Robot.vision.isVectorPresent()) {
-      rotate = out;
+      rotate = -out;
     }
     // if robot is to the left of the line and coming in at sharp off angle you get
     // vector like: (32 14) (69 29) xdiff=-37 ydiff=-15

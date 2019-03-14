@@ -45,16 +45,7 @@ public class DriverShuffleboardTab {
     private NetworkTableEntry ntePIDSetpointArm;
 
     public DriverShuffleboardTab(){
-        talonSRX5 = new WPI_TalonSRX(5);
-        talonSRX6 = new WPI_TalonSRX(6);
-        talonSRX8 = new WPI_TalonSRX(8);
-        master = talonSRX8;
-        encoder = new TalonSrxEncoder(master);
-
-        masterArm = talonSRX5;
-        followerArm = talonSRX6;
-
-        followerArm.follow(master);
+        
     }
 
     public void setup(){

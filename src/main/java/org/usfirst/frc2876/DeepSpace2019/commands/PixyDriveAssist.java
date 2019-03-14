@@ -23,7 +23,7 @@ public class PixyDriveAssist extends Command {
   @Override
   protected void initialize() {
     Robot.vision.lineController.reset();
-    Robot.vision.lineController.setSetpoint(39);
+    Robot.vision.lineController.setSetpoint(35);
     Robot.vision.lineController.enable();
   }
 
@@ -40,7 +40,7 @@ public class PixyDriveAssist extends Command {
         } else if (speed <= -0.3){
           speed = -0.3;
         }
-        double turn = Robot.vision.lineController.get();
+        double turn = -Robot.vision.lineController.get();
         Robot.vision.updateShuffleDrivetrainOutputs(speed, turn);
         Robot.driveTrain.setVelocityArcadeJoysticks(speed, turn);
       }

@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(Scheduler.getInstance());
 
         driverTab.setup();
-        driverTab.setupSecond();
+        // driverTab.setupSecond();
 
     }
 
@@ -135,5 +135,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        
     }
 }
