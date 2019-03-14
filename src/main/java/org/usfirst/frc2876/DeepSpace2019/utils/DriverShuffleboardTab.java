@@ -100,23 +100,22 @@ public class DriverShuffleboardTab {
         // Zero Arm Pos
 
         // Hatch (encoder postion + set-point)
-        driveTeamTab.add("HatchEncoder", encoder).withPosition(18, 0).withSize(10, 6);
+        //driveTeamTab.add("HatchEncoder", encoder).withPosition(18, 0).withSize(10, 6);
         // ntePIDSetpoint = driveTeamTab.add("HatchSetpoint", 0)
         // .withSize(7, 3).withPosition(17, 9).getEntry();
 
         // Zero Hatch Pos
-        ShuffleboardLayout hatchCommand = driveTeamTab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
-                .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0);
-        hatchCommand.add(new HatchZeroPosition());
+        // ShuffleboardLayout hatchCommand = driveTeamTab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
+        //         .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0);
+        // hatchCommand.add(new HatchZeroPosition());
     }
 
-    public double getPosition() {
-        return master.getSelectedSensorPosition();
-    }
+    public void periodic() {
 
-    public void resetPosition() {
-        // zero encoder sensor
-        master.setSelectedSensorPosition(0, 0, 30);
+        nteIsVectorFound.setBoolean(Robot.vision.isVectorPresent());
+        ntePIDSetpointHatch.setDouble(Robot.hatch.getSetpoint());
+
+
     }
 
 }

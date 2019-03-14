@@ -171,6 +171,10 @@ public class Hatch extends Subsystem {
         return master.getSelectedSensorPosition();
     }
 
+    public double getSetpoint() {
+        return master.getClosedLoopTarget();
+    }
+
     public void resetPosition() {
         // zero encoder sensor
         master.setSelectedSensorPosition(0, 0, 30);
