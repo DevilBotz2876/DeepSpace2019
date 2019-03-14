@@ -245,7 +245,10 @@ public class Vision extends Subsystem {
     }
 
     public boolean isVectorPresent() {
-        return pixySource.isVectorPresent();
+        if (lineController.isEnabled()) {
+          return pixySource.isVectorPresent();
+        }
+        return false;
     }
 
     @Override

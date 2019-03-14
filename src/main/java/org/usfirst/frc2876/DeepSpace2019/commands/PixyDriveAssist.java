@@ -35,16 +35,23 @@ public class PixyDriveAssist extends Command {
     double rotate = -xbox.getX(Hand.kRight);
     if (Robot.vision.isVectorPresent()) {
       if (Math.abs(speed) >= .1 ) {
-        if (speed >= .3) {
-          speed = 0.3;
-        } else if (speed <= -0.3){
-          speed = -0.3;
+        double MAX_SPEED = .2;
+        if (speed >= MAX_SPEED) {
+          speed = MAX_SPEED;
+        } else if (speed <= MAX_SPEED){
+          speed = -MAX_SPEED;
         }
         double turn = -Robot.vision.lineController.get();
         Robot.vision.updateShuffleDrivetrainOutputs(speed, turn);
         Robot.driveTrain.setVelocityArcadeJoysticks(speed, turn);
       }
     } else {
+      double MAX_NO_PIXY_SPEED = .4;
+      if (speed > MAX_NO_PIXY_SPEED) {
+        speed = MAX_NO_PIXY_SPEED;
+      } else if (speed < -MAX_NO_PIXY_SPEED) {
+        speed = -MAX_NO_PIXY_SPEED;
+      }
       Robot.vision.updateShuffleDrivetrainOutputs(speed, rotate);
       Robot.driveTrain.setVelocityArcadeJoysticks(speed, rotate);
     }

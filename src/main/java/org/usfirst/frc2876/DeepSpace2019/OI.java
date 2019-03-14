@@ -103,7 +103,8 @@ public class OI {
         // xButton.whileHeld(new HatchPosition(Robot.hatch.BOTTOM));
 
         xButton = new JoystickButton(xboxController, X_BUTTON);
-        xButton.whileHeld(new PixyDriveAssist());
+        //xButton.whileHeld(new PixyDriveAssist());
+        xButton.whileHeld(new PixyLine());
 
         leftBumper = new JoystickButton(xboxController, LEFT_BUMPER);
         leftBumper.whileHeld(new ScoopOut());
