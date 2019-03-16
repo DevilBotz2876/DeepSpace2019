@@ -66,7 +66,7 @@ public class DriveTrain extends Subsystem {
     private TalonSrxEncoder leftEncoder;
     private TalonSrxEncoder rightEncoder;
 
-    private boolean toggleInverseDrive = false;
+    private boolean toggleInverseDrive = true;
     private boolean toggleHelp;
 
     // Calculated this following instructions here:
@@ -214,8 +214,8 @@ public class DriveTrain extends Subsystem {
                 .withSize(2, 1).getEntry();
 
         nteMotorOutput = tab.add("RPM", 0).withSize(4, 4).getEntry();
-        nteInverseDriveToggle = tab.add("Hatch-Side Forward", true)
-        .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+        // nteInverseDriveToggle = tab.add("Hatch-Side Forward", true)
+        // .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
                 .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
@@ -296,7 +296,7 @@ public class DriveTrain extends Subsystem {
         // This reads slider on dash and changes ramp rate. Should be removed once we
         // find a a good rate for driving.
         //updateRamps();
-        updateDirection();
+        // updateDirection();
 
         double leftRPM, rightRPM;
 
@@ -380,16 +380,24 @@ public class DriveTrain extends Subsystem {
     }
 
     public boolean toggleInverseDrive() {
-        boolean buttonPressed = Robot.oi.getSelectButton();
-        if (buttonPressed && toggleHelp) {
+        // boolean buttonPressed = Robot.oi.getSelectButton();
+        // if (buttonPressed && toggleHelp) {
             toggleInverseDrive = !toggleInverseDrive;
-        }
-        // leftMaster.setInverted(toggleInverseDrive);
-        // rightMaster.setInverted(toggleInverseDrive);
-        toggleHelp = buttonPressed;
+        // }
+        // // leftMaster.setInverted(toggleInverseDrive);
+        // // rightMaster.setInverted(toggleInverseDrive);
+        // toggleHelp = buttonPressed;
         return toggleInverseDrive;
     }
 
+    public void setInverseHatch() {
+        toggleInverseDrive = true;
+    }
+
+    public void setInverseArm() {
+        toggleInverseDrive = false;
+    }
+    
     public boolean getToggleInverseDrive() {
         return toggleInverseDrive;
     }

@@ -67,7 +67,7 @@ public class DriverShuffleboardTab {
         .withSize(7, 3).withPosition(17, 6);
 
         // Starting Position (Hatch-front or Cargo-front)
-        nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", true).withPosition(17, 12)
+        nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", Robot.driveTrain.getToggleInverseDrive()).withPosition(17, 12)
         .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
         // Is Vector Found
@@ -101,10 +101,15 @@ public class DriverShuffleboardTab {
         // hatchCommand.add(new HatchZeroPosition());
     }
 
+    public void init(){
+        
+    }
+
     public void periodic() {
 
         nteIsVectorFound.setBoolean(Robot.vision.isVectorPresent());
         ntePIDSetpointHatch.setDouble(Robot.hatch.getSetpoint());
+        nteInverseDriveToggle.getBoolean(Robot.driveTrain.getToggleInverseDrive());
 
 
     }
