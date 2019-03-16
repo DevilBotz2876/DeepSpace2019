@@ -13,7 +13,7 @@ import com.kauailabs.navx.frc.AHRS;
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
-import org.usfirst.frc2876.DeepSpace2019.commands.DriveReverse;
+import org.usfirst.frc2876.DeepSpace2019.commands.DriveHatch;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveRotate;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
@@ -21,10 +21,10 @@ import org.usfirst.frc2876.DeepSpace2019.commands.XboxDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.Ramp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -222,7 +221,7 @@ public class DriveTrain extends Subsystem {
         commands.add(new CGDriveOffPlatform());
         commands.add(new DriveStop());
         commands.add(new DriveForward());
-        commands.add(new DriveReverse());
+        commands.add(new DriveHatch());
 
         commands.add(new DriveRotate(180.0));
 

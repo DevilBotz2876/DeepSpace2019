@@ -12,6 +12,7 @@ import java.util.Map;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffHatch;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchZeroPosition;
 
@@ -65,6 +66,9 @@ public class DriverShuffleboardTab {
         //I CHANGED NAME TO "Auto Leave Platform"
         driveTeamTab.add("Auto Leave Platform", new CGDriveOffPlatform())
         .withSize(7, 3).withPosition(17, 6);
+
+        driveTeamTab.add("Auto Drive Hatch", new CGDriveOffHatch())
+        .withSize(7, 3).withPosition(26, 6);
 
         // Starting Position (Hatch-front or Cargo-front)
         nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", Robot.driveTrain.getToggleInverseDrive()).withPosition(17, 12)

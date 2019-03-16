@@ -9,21 +9,22 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveReverse extends Command {
+public class DriveHatch extends Command {
 
-    public DriveReverse() {
+    public DriveHatch() {
         requires(Robot.driveTrain);
     }
 
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        Robot.driveTrain.setInverseHatch();
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        Robot.driveTrain.setVelocityArcadeJoysticks(-.5, 0);
+        Robot.driveTrain.setVelocityArcadeJoysticks(.75, 0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -36,6 +37,7 @@ public class DriveReverse extends Command {
     @Override
     protected void end() {
         Robot.driveTrain.setVelocityArcadeJoysticks(0, 0);
+        Robot.driveTrain.setInverseHatch();
     }
 
     // Called when another command which requires one or more of the same
