@@ -13,6 +13,7 @@ public class CGDriveOffPlatform extends CommandGroup {
                 // set it back to original value if changing it. Better to set it to original
                 // value in xboxDrive command.
                 //
+                addSequential(new ArmUpDrive(), 1.0);
                 addSequential(new DriveForward(), 1.0);
                 // addParallel(new WaitCommand(3));
                 // addSequential(new DriveStop());

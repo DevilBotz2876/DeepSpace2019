@@ -12,12 +12,12 @@ import org.usfirst.frc2876.DeepSpace2019.commands.ArmIdle;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmPID;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmUp;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmUpDrive;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -88,7 +88,7 @@ public class Arm extends Subsystem {
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
         master.setSelectedSensorPosition(0);
         /* choose to ensure sensor is positive when output is positive */
-        master.setSensorPhase(false);
+        master.setSensorPhase(true);
 
         /*
          * choose based on what direction you want forward/positive to be. This does not
@@ -166,6 +166,7 @@ public class Arm extends Subsystem {
         commands.add(new ArmStop());
         commands.add(new ArmDown());
         commands.add(new ArmUp());
+        commands.add(new ArmUpDrive());
         commands.add(new ArmPID());
 
     }
@@ -179,10 +180,7 @@ public class Arm extends Subsystem {
         nteMotorOutput.setDouble(master.get());
         nteCurrentPosition.setDouble(getPosition());
         nteLimit.setBoolean(isArmBottom());
-        if (periodicLoopCounter % 100 == 0) {
-            System.out.println("limit "+limit.get());
-        }
-        periodicLoopCounter++;
+       
         if (master.getControlMode() == ControlMode.Position) {
             ntePIDSetpoint.setDouble(master.getClosedLoopTarget(0));
         }
@@ -191,7 +189,7 @@ public class Arm extends Subsystem {
             int pos = master.getSensorCollection().getPulseWidthPosition();
             int posMask = pos & 0xFFF;
             int ssPos = master.getSelectedSensorPosition();
-            System.out.println("arm limit: " + limit.get()
+            System.out.println("arm limit: " + isArmBottom()
             + " pos: " + pos
             + " posMask: " + posMask
             + " ssPos: " + ssPos
@@ -225,7 +223,7 @@ public class Arm extends Subsystem {
     }
 
     public boolean isArmBottom() {
-        return limit.get();
+        return !limit.get();
     }
 
     public void setPosition(double pos) {
@@ -235,8 +233,8 @@ public class Arm extends Subsystem {
     }
 
     public double getPosition() {
-        return master.getSensorCollection().getPulseWidthPosition() & 0xFFF;
-        // return master.getSensorCollection().getPulseWidthPosition();
+        //return master.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+        return master.getSensorCollection().getPulseWidthPosition();
         // return master.getSelectedSensorPosition();
     }
 
