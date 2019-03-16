@@ -1,17 +1,24 @@
 package org.usfirst.frc2876.DeepSpace2019.utils;
 
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 
 public class DPadButton extends Button {
 
-    Joystick joystick;
+    GenericHID joystick;
     Direction direction;
 
-    public DPadButton(Joystick joystick, Direction direction) {
+    public DPadButton(XboxController joystick, Direction direction) {
         this.joystick = joystick;
         this.direction = direction;
+    }
+
+    public DPadButton(XboxController joystick) {
+        this.joystick = joystick;
+        this.direction = Direction.UP;
     }
 
     public static enum Direction {

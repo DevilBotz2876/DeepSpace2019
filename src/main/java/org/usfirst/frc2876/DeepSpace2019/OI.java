@@ -7,8 +7,8 @@ import org.usfirst.frc2876.DeepSpace2019.commands.HatchDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.HatchUp;
-import org.usfirst.frc2876.DeepSpace2019.commands.PixyDriveAssist;
 import org.usfirst.frc2876.DeepSpace2019.commands.PixyLine;
+import org.usfirst.frc2876.DeepSpace2019.commands.ScoopHold;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopIn;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
@@ -114,7 +114,7 @@ public class OI {
         rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
         rightBumper.whileHeld(new ScoopIn());
 
-        dpad = DPadButton();
+        dpad = new DPadButton(xboxController);
         dpad.whenPressed(new ScoopHold());
         
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
