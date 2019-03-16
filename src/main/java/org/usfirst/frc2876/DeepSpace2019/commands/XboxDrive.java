@@ -24,6 +24,7 @@ public class XboxDrive extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+                Robot.driveTrain.getCameraSource();
 
     }
 
@@ -40,13 +41,13 @@ public class XboxDrive extends Command {
         // Create temp var to store the speed and rotate values and negate appropriately
         // inside if/else block
         // - Give get func clearer name, don't include action/verb in get function name
-        Robot.driveTrain.getCameraSource();
+        //Robot.driveTrain.getCameraSource();
         if (!Robot.driveTrain.getToggleInverseDrive()) {
             Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
-            Robot.driveTrain.server.setSource(Robot.driveTrain.scoopCamera);
+            //Robot.driveTrain.server.setSource(Robot.driveTrain.scoopCamera);
         } else {
             Robot.driveTrain.setVelocityArcadeJoysticks(xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
-            Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
+            //Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
         }
     }
 

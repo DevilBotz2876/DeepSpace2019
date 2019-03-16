@@ -242,6 +242,8 @@ public class DriveTrain extends Subsystem {
         scoopCamera.setResolution(160, 120);
         hatchCamera.setFPS(15);
         hatchCamera.setResolution(160, 120);
+        
+        server.setSource(hatchCamera);
     }
     
     public void getCameraSource(){
@@ -378,23 +380,26 @@ public class DriveTrain extends Subsystem {
         return (a * (speed * speed * speed)) + ((1 - a) * speed);
     }
 
+    public boolean isInverseHatch() {
+        return toggleInverseDrive == true;
+    }
     public boolean toggleInverseDrive() {
-        // boolean buttonPressed = Robot.oi.getSelectButton();
-        // if (buttonPressed && toggleHelp) {
-            toggleInverseDrive = !toggleInverseDrive;
-        // }
-        // // leftMaster.setInverted(toggleInverseDrive);
-        // // rightMaster.setInverted(toggleInverseDrive);
-        // toggleHelp = buttonPressed;
+        if (isInverseHatch()) {
+            setInverseArm();
+        } else {
+            setInverseHatch();
+        }
         return toggleInverseDrive;
     }
 
     public void setInverseHatch() {
         toggleInverseDrive = true;
+        server.setSource(Robot.driveTrain.hatchCamera);
     }
 
     public void setInverseArm() {
         toggleInverseDrive = false;
+        server.setSource(Robot.driveTrain.scoopCamera);
     }
     
     public boolean getToggleInverseDrive() {

@@ -185,16 +185,16 @@ public class Arm extends Subsystem {
             ntePIDSetpoint.setDouble(master.getClosedLoopTarget(0));
         }
 
-        if (periodicLoopCounter % 50 == 0) {
-            int pos = master.getSensorCollection().getPulseWidthPosition();
-            int posMask = pos & 0xFFF;
-            int ssPos = master.getSelectedSensorPosition();
-            System.out.println("arm limit: " + isArmBottom()
-            + " pos: " + pos
-            + " posMask: " + posMask
-            + " ssPos: " + ssPos
-            );
-        }
+        // if (periodicLoopCounter % 50 == 0) {
+        //     int pos = master.getSensorCollection().getPulseWidthPosition();
+        //     int posMask = pos & 0xFFF;
+        //     int ssPos = master.getSelectedSensorPosition();
+        //     System.out.println("arm limit: " + isArmBottom()
+        //     + " pos: " + pos
+        //     + " posMask: " + posMask
+        //     + " ssPos: " + ssPos
+        //     );
+        // }
         periodicLoopCounter++;
     }
 
