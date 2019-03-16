@@ -17,6 +17,7 @@ import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -45,10 +46,10 @@ public class Arm extends Subsystem {
     private TalonSrxEncoder encoder;
 
     private DigitalInput limit;
-
     private int periodicLoopCounter;
 
     public Arm() {
+        periodicLoopCounter=0;
         talonSRX5 = new WPI_TalonSRX(5);
         talonSRX6 = new WPI_TalonSRX(6);
 
@@ -59,11 +60,7 @@ public class Arm extends Subsystem {
 
         follower.follow(master);
 
-        // TODO configure talons and stuffs.
-        // master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-        // master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        // master.configNominalOutputForward(.2);
-        // master.configNominalOutputReverse(-.2);
+
         //
         // https://phoenix-documentation.readthedocs.io/en/latest/ch16_ClosedLoop.html#motion-magic-position-velocity-current-closed-loop-closed-loop
         // https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/b71916c131f6b381ba26bb5ac46302180088614d/Java/MotionMagic/src/main/java/frc/robot/Robot.java
@@ -89,7 +86,7 @@ public class Arm extends Subsystem {
         /* choose the sensor and sensor direction */
         //master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
-
+        master.setSelectedSensorPosition(0);
         /* choose to ensure sensor is positive when output is positive */
         master.setSensorPhase(false);
 
@@ -100,9 +97,11 @@ public class Arm extends Subsystem {
         master.setInverted(true);
         follower.setInverted(true);
 
+        
         /* set the peak and nominal outputs, 12V means full */
-        master.configNominalOutputForward(0, kTimeoutMs);
-        master.configNominalOutputReverse(0, kTimeoutMs);
+        //master.configNominalOutputForward(0, kTimeoutMs);
+        //master.configNominalOutputReverse(0, kTimeoutMs);
+
         // 1 means full power, 12v. Perhaps make down smaller than up since gravity is
         // helping go down.
         // up
@@ -113,7 +112,7 @@ public class Arm extends Subsystem {
          * set the allowable closed-loop error, Closed-Loop output will be neutral
          * within this range. See Table in Section 17.2.1 for native units per rotation.
          */
-        // master.configAllowableClosedloopError(kPIDLoopIdx, 10, kTimeoutMs);
+        //master.configAllowableClosedloopError(kPIDLoopIdx, 10, kTimeoutMs);
 
         /* set closed loop gains in slot0, typically kF stays zero. */
         // master.config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
@@ -179,8 +178,11 @@ public class Arm extends Subsystem {
         // SmartDashboard.putNumber("Arm Motor Output", master.get());
         nteMotorOutput.setDouble(master.get());
         nteCurrentPosition.setDouble(getPosition());
-        nteLimit.setBoolean(limit.get());
-
+        nteLimit.setBoolean(isArmBottom());
+        if (periodicLoopCounter % 100 == 0) {
+            System.out.println("limit "+limit.get());
+        }
+        periodicLoopCounter++;
         if (master.getControlMode() == ControlMode.Position) {
             ntePIDSetpoint.setDouble(master.getClosedLoopTarget(0));
         }
@@ -207,7 +209,7 @@ public class Arm extends Subsystem {
     }
 
     public void armDown() {
-        master.set(ControlMode.PercentOutput, 0.2);
+        master.set(ControlMode.PercentOutput, -0.2);
     }
 
     public void armStop() {
@@ -220,6 +222,10 @@ public class Arm extends Subsystem {
 
     public void resetPosition() {
         master.setSelectedSensorPosition(0, 0, 30);
+    }
+
+    public boolean isArmBottom() {
+        return limit.get();
     }
 
     public void setPosition(double pos) {

@@ -9,6 +9,7 @@ package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ArmUp extends Command {
@@ -30,6 +31,7 @@ public class ArmUp extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
+   
     return false;
   }
 

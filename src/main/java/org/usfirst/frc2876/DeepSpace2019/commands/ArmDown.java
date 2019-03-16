@@ -9,6 +9,7 @@ package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ArmDown extends Command {
@@ -25,6 +26,7 @@ public class ArmDown extends Command {
   @Override
   protected void execute() {
     Robot.arm.armDown();
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
