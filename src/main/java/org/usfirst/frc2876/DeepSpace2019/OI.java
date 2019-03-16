@@ -14,6 +14,7 @@ import org.usfirst.frc2876.DeepSpace2019.commands.ScoopOut;
 import org.usfirst.frc2876.DeepSpace2019.commands.ScoopStop;
 // import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
 import org.usfirst.frc2876.DeepSpace2019.commands.ToggleInverseDrive;
+import org.usfirst.frc2876.DeepSpace2019.utils.DPadButton;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -61,6 +62,7 @@ public class OI {
         JoystickButton selectButton;
         JoystickButton leftBumper;
         JoystickButton rightBumper;
+        DPadButton dpad;
 
     // Button rJoyButton;
     // Button lJoyButton;
@@ -112,6 +114,9 @@ public class OI {
         rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
         rightBumper.whileHeld(new ScoopIn());
 
+        dpad = DPadButton();
+        dpad.whenPressed(new ScoopHold());
+        
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
         selectButton.whenPressed(new ToggleInverseDrive());
         

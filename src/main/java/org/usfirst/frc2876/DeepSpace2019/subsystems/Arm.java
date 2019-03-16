@@ -9,12 +9,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmDown;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmIdle;
-import org.usfirst.frc2876.DeepSpace2019.commands.ArmPosition;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmPID;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmUp;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -39,12 +41,18 @@ public class Arm extends Subsystem {
     private NetworkTableEntry nteSetPosition;
     private NetworkTableEntry ntePIDSetpoint;
     private NetworkTableEntry nteCurrentPosition;
+    private NetworkTableEntry nteArmPidOutput;
     private TalonSrxEncoder encoder;
+
+    private DigitalInput limit;
+
+    private int periodicLoopCounter;
 
     public Arm() {
         talonSRX5 = new WPI_TalonSRX(5);
         talonSRX6 = new WPI_TalonSRX(6);
-        
+
+        limit = new DigitalInput(1);
 
         master = talonSRX5;
         follower = talonSRX6;
@@ -69,6 +77,8 @@ public class Arm extends Subsystem {
         setupPID();
 
         encoder = new TalonSrxEncoder(master);
+
+        periodicLoopCounter = 0;
     }
 
     // Grabbed this from last year elevator which used same motor/encoder setup.
@@ -77,6 +87,7 @@ public class Arm extends Subsystem {
         int kPIDLoopIdx = 0;
         int kTimeoutMs = 30;
         /* choose the sensor and sensor direction */
+        //master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
 
         /* choose to ensure sensor is positive when output is positive */
@@ -86,15 +97,17 @@ public class Arm extends Subsystem {
          * choose based on what direction you want forward/positive to be. This does not
          * affect sensor phase.
          */
-        master.setInverted(false);
-        follower.setInverted(false);
+        master.setInverted(true);
+        follower.setInverted(true);
 
         /* set the peak and nominal outputs, 12V means full */
         master.configNominalOutputForward(0, kTimeoutMs);
         master.configNominalOutputReverse(0, kTimeoutMs);
         // 1 means full power, 12v. Perhaps make down smaller than up since gravity is
         // helping go down.
-        master.configPeakOutputForward(.1, kTimeoutMs);
+        // up
+        master.configPeakOutputForward(.4, kTimeoutMs);
+        // down
         master.configPeakOutputReverse(-.3, kTimeoutMs);
         /*
          * set the allowable closed-loop error, Closed-Loop output will be neutral
@@ -126,7 +139,7 @@ public class Arm extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new ArmStop());
+        setDefaultCommand(new ArmIdle());
     }
 
     public void setupShuffleboard() {
@@ -139,6 +152,8 @@ public class Arm extends Subsystem {
         nteMotorOutput = tab.add("ArmMotorOutput", master.get()).getEntry();
         ntePIDSetpoint = tab.add("ArmPIDSetpoint", 0).getEntry();
         nteCurrentPosition = tab.add("ArmCurrentPosition", 0).getEntry();
+        nteLimit = tab.add("ArmBottomLimit", limit.get()).getEntry();
+        nteArmPidOutput = tab.add("ArmPidOutput", 0).getEntry();
 
         nteSetPosition = tab.add("ArmSetPosition", 1)
                 // .withWidget("Number Slider")
@@ -152,7 +167,7 @@ public class Arm extends Subsystem {
         commands.add(new ArmStop());
         commands.add(new ArmDown());
         commands.add(new ArmUp());
-        commands.add(new ArmPosition(TOP / 2));
+        commands.add(new ArmPID());
 
     }
 
@@ -164,24 +179,47 @@ public class Arm extends Subsystem {
         // SmartDashboard.putNumber("Arm Motor Output", master.get());
         nteMotorOutput.setDouble(master.get());
         nteCurrentPosition.setDouble(getPosition());
+        nteLimit.setBoolean(limit.get());
 
         if (master.getControlMode() == ControlMode.Position) {
             ntePIDSetpoint.setDouble(master.getClosedLoopTarget(0));
-
         }
+
+        if (periodicLoopCounter % 50 == 0) {
+            int pos = master.getSensorCollection().getPulseWidthPosition();
+            int posMask = pos & 0xFFF;
+            int ssPos = master.getSelectedSensorPosition();
+            System.out.println("arm limit: " + limit.get()
+            + " pos: " + pos
+            + " posMask: " + posMask
+            + " ssPos: " + ssPos
+            );
+        }
+        periodicLoopCounter++;
     }
-    // TODO Add an update dashboard method
+
+    public void updateDashboardPID(PIDController pid) {
+        nteArmPidOutput.setDouble(pid.get());
+    }
 
     public void armUp() {
-        master.set(ControlMode.PercentOutput, -0.2);
+        master.set(ControlMode.PercentOutput, 0.3);
     }
 
     public void armDown() {
-        master.set(ControlMode.PercentOutput, 0.05);
+        master.set(ControlMode.PercentOutput, 0.2);
     }
 
     public void armStop() {
         master.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void set(double val) {
+        master.set(ControlMode.PercentOutput, val);
+    }
+
+    public void resetPosition() {
+        master.setSelectedSensorPosition(0, 0, 30);
     }
 
     public void setPosition(double pos) {

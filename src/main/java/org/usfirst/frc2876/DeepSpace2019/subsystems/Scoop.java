@@ -47,6 +47,10 @@ public class Scoop extends Subsystem {
         master.set(-0.5);
     }
 
+    public void scoopHold() {
+        master.set(.25);
+    }
+
     public void scoopStop() {
         master.set(0);
     }
