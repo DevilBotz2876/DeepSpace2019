@@ -82,7 +82,7 @@ public class DriveTrain extends Subsystem {
     // Don't allow drivetrain to run at max speed. If we did then there is no room
     // for PID to adjust velocity if we have already maxed out. Specify a number
     // between 0-1 to limit rpm to percentage of max.
-    private double RPM_LIMIT = .9;
+    private double RPM_LIMIT = .8;
     // Set this in constructor
     private double MAX_RPM;
 
@@ -243,7 +243,9 @@ public class DriveTrain extends Subsystem {
         hatchCamera.setFPS(15);
         hatchCamera.setResolution(160, 120);
         
-        server.setSource(hatchCamera);
+        // server.setSource(hatchCamera);
+        server.setSource(scoopCamera);
+
     }
     
     public void getCameraSource(){
@@ -376,11 +378,12 @@ public class DriveTrain extends Subsystem {
         // pressed/moved send small output to motors. When joystick
         // is press/moved alot send BIG output to motors.
         // y=a(x^3)+(1-a)x
-        double a = .2;
+        double a = .05;
         return (a * (speed * speed * speed)) + ((1 - a) * speed);
     }
 
     public boolean isInverseHatch() {
+        //System.out.print(toggleInverseDrive);
         return toggleInverseDrive == true;
     }
     public boolean toggleInverseDrive() {
@@ -400,6 +403,7 @@ public class DriveTrain extends Subsystem {
     public void setInverseArm() {
         toggleInverseDrive = false;
         server.setSource(Robot.driveTrain.scoopCamera);
+        System.out.print("Inverse done");
     }
     
     public boolean getToggleInverseDrive() {

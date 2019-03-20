@@ -112,11 +112,16 @@ public class OI {
         leftBumper.whileHeld(new ScoopOut());
 
         rightBumper = new JoystickButton(xboxController, RIGHT_BUMPER);
-        rightBumper.whileHeld(new ScoopIn());
-
         dpad = new DPadButton(xboxController);
-        dpad.whenPressed(new ScoopHold());
-        
+
+        // rightBumper.whileHeld(new ScoopIn());
+        // dpad.whenPressed(new ScoopHold());
+      
+        rightBumper.whenPressed(new ScoopHold());
+
+       dpad.whileHeld(new ScoopIn());
+
+
         selectButton = new JoystickButton(xboxController, SELECT_BUTTON);
         selectButton.whenPressed(new ToggleInverseDrive());
         
