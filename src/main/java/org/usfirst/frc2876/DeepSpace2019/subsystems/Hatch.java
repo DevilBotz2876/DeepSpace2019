@@ -91,7 +91,7 @@ public class Hatch extends Subsystem {
             BOTTOM = -670;
             allConfigs.slot0.kP = 1;
         } else {
-            TOP = 0;
+            TOP = -50;
             CARRY = -800;
             PICKUP = -1400;
             BOTTOM = -1550;
@@ -150,11 +150,11 @@ public class Hatch extends Subsystem {
     }
 
     public void hatchUp() {
-        master.set(ControlMode.PercentOutput, 0.3);
+        master.set(ControlMode.PercentOutput, 0.5);
     }
 
     public void hatchDown() {
-        master.set(ControlMode.PercentOutput, -0.3);
+        master.set(ControlMode.PercentOutput, -0.5);
     }
 
     public void hatchStop() {

@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffHatch;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGResetHatchPosition;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffCargo;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -26,7 +27,7 @@ public class DriverShuffleboardTab {
 
     private NetworkTableEntry nteIsHatchForward;
     private NetworkTableEntry nteIsVectorFound;
-    private NetworkTableEntry ntePIDSetpointHatch;
+    private NetworkTableEntry nteHatchPosition;
     private NetworkTableEntry nteSetPositionHatch;
     private NetworkTableEntry nteSetPositionArm;
     private NetworkTableEntry ntePIDSetpointArm;
@@ -61,6 +62,10 @@ public class DriverShuffleboardTab {
         driveTeamTab.add("Auto Drive Hatch", new CGDriveOffHatch())
         .withSize(7, 3).withPosition(25, 6);
 
+        // Zero Arm Pos
+        driveTeamTab.add("Reset Hatch Position", new CGResetHatchPosition())
+        .withSize(7,3).withPosition(33,6);
+
         // Starting Position (Hatch-front or Cargo-front)
         nteIsHatchForward = driveTeamTab.add("Hatch-Side Forward", Robot.driveTrain.isHatchForward())
         .withSize(7,6).withPosition(25, 0).getEntry();
@@ -71,20 +76,17 @@ public class DriverShuffleboardTab {
 
         // Arm (encoder position + set-point)
 
-        // Zero Arm Pos
 
         // Hatch (encoder postion + set-point)
-        ntePIDSetpointHatch = driveTeamTab.add("HatchSetpoint", 0)
+        nteHatchPosition = driveTeamTab.add("HatchPosition", Robot.hatch.getPosition())
         .withSize(5, 5).withPosition(33, 0).getEntry();
-
-        // Zero Hatch Pos
 
     }
     
     public void periodic() {
 
         nteIsVectorFound.setBoolean(Robot.vision.isVectorPresent());
-        ntePIDSetpointHatch.setDouble(Robot.hatch.getSetpoint());
+        nteHatchPosition.setDouble(Robot.hatch.getPosition());
         nteIsHatchForward.setBoolean(Robot.driveTrain.isHatchForward());
 
 
