@@ -8,12 +8,15 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ArmIdle extends Command {
-  public ArmIdle() {
+// This command does nothing with hatch subsystem.  Set this to default command and it won't interfere(set motors to unexpected speed/state for example) with any testing you might do while working on hatch subsystem
+
+public class ArmXbox extends Command {
+  public ArmXbox() {
     // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
     requires(Robot.arm);
   }
 
@@ -25,6 +28,19 @@ public class ArmIdle extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double rtrigger = Robot.oi.xboxController.getTriggerAxis(Hand.kRight);
+    //double trigger = Robot.oi.xboxController.getRawAxis(Robot.oi.RIGHT_TRIGGER);
+    double ltrigger = Robot.oi.xboxController.getTriggerAxis(Hand.kLeft);
+    //double trigger = Robot.oi.xboxController.getRawAxis(Robot.oi.LEFT_TRIGGER);
+    
+    if (Math.abs(ltrigger) > .05) {
+      Robot.arm.armDown();
+    }
+    else if (Math.abs(rtrigger) > .05) {
+      Robot.arm.armUp();
+    } else {
+      Robot.arm.armStop();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

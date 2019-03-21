@@ -5,10 +5,6 @@ import org.usfirst.frc2876.DeepSpace2019.Robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
-import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 
 /**
  *
@@ -16,15 +12,12 @@ import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 public class XboxDrive extends Command {
 
     public XboxDrive() {
-
         requires(Robot.driveTrain);
-
     }
 
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
-                Robot.driveTrain.getCameraSource();
 
     }
 
@@ -33,21 +26,10 @@ public class XboxDrive extends Command {
     protected void execute() {
         XboxController xbox = Robot.oi.getXboxController();
 
-        // TODO:
-        // - Test that robot drives fwd/back and turns left/right correctly when inverse
-        // drive is set both ways.
-        // - clean this up, why negate get call?
-        // - break out the call to setVelocityArcadeJoysticks out of if/else block.
-        // Create temp var to store the speed and rotate values and negate appropriately
-        // inside if/else block
-        // - Give get func clearer name, don't include action/verb in get function name
-        //Robot.driveTrain.getCameraSource();
-        if (!Robot.driveTrain.getToggleInverseDrive()) {
-            Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
-            //Robot.driveTrain.server.setSource(Robot.driveTrain.scoopCamera);
-        } else {
+        if (Robot.driveTrain.isHatchForward()) {
             Robot.driveTrain.setVelocityArcadeJoysticks(xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
-            //Robot.driveTrain.server.setSource(Robot.driveTrain.hatchCamera);
+        } else {
+            Robot.driveTrain.setVelocityArcadeJoysticks(-xbox.getY(Hand.kLeft), -xbox.getX(Hand.kRight));
         }
     }
 
@@ -60,11 +42,13 @@ public class XboxDrive extends Command {
     // Called once after isFinished returns true
     @Override
     protected void end() {
+        Robot.driveTrain.setVelocityArcadeJoysticks(0, 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
+        end();
     }
 }

@@ -65,8 +65,7 @@ public class DriveTrain extends Subsystem {
     private TalonSrxEncoder leftEncoder;
     private TalonSrxEncoder rightEncoder;
 
-    private boolean toggleInverseDrive = true;
-    private boolean toggleHelp;
+    private boolean hatchIsForward;
 
     // Calculated this following instructions here:
     // https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#confirm-sensor-resolution-velocity
@@ -98,13 +97,15 @@ public class DriveTrain extends Subsystem {
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
     private NetworkTableEntry nteMotorOutput;
-    private NetworkTableEntry nteInverseDriveToggle;
+    // private NetworkTableEntry nteInverseDriveToggle;
 
     
 
     // TODO Declare navx
 
     public DriveTrain() {
+
+        hatchIsForward = true;
 
         navx = new AHRS(SPI.Port.kMXP);
 
@@ -189,7 +190,7 @@ public class DriveTrain extends Subsystem {
         turnController.setInputRange(0.0, 360.0);
         turnController.setOutputRange(-0.5, 0.5);
 
-        initializeCameras();
+        //initializeCameras();
     }
 
     @Override
@@ -227,8 +228,9 @@ public class DriveTrain extends Subsystem {
 
         commands.add(new ToggleInverseDrive());
 
-        tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
-
+        if (server != null) {
+            tab.add("Camera", SendableCameraWrapper.wrap(server.getSource()));
+        }
     }
     
     public void initializeCameras() {
@@ -248,9 +250,9 @@ public class DriveTrain extends Subsystem {
 
     }
     
-    public void getCameraSource(){
-        server.getSource();
-    }
+    // public void getCameraSource(){
+    //     server.getSource();
+    // }
 
     @Override
     public void periodic() {
@@ -266,10 +268,6 @@ public class DriveTrain extends Subsystem {
         rampArcadeSpeed.setMaxChangePerSecond(MAX_RPM * r);
         rampTankLeft.setMaxChangePerSecond(MAX_RPM * r);
         rampTankRight.setMaxChangePerSecond(MAX_RPM * r);
-    }
-
-    private void updateDirection(){
-        toggleInverseDrive = nteInverseDriveToggle.getBoolean(toggleInverseDrive);
     }
 
     public void arcadeDrive(double xSpeed, double zRotation) {
@@ -382,36 +380,37 @@ public class DriveTrain extends Subsystem {
         return (a * (speed * speed * speed)) + ((1 - a) * speed);
     }
 
-    public boolean isInverseHatch() {
-        //System.out.print(toggleInverseDrive);
-        return toggleInverseDrive == true;
+    public boolean isHatchForward() {
+        return hatchIsForward == true;
     }
     public boolean toggleInverseDrive() {
-        if (isInverseHatch()) {
+        if (isHatchForward()) {
             setInverseArm();
         } else {
             setInverseHatch();
         }
-        return toggleInverseDrive;
+        return hatchIsForward;
     }
 
     public void setInverseHatch() {
-        toggleInverseDrive = true;
-        server.setSource(Robot.driveTrain.hatchCamera);
+        hatchIsForward = true;
+        if (server != null) {
+            server.setSource(Robot.driveTrain.hatchCamera);
+        }
+        System.out.println("InverseHatch done");
     }
 
     public void setInverseArm() {
-        toggleInverseDrive = false;
-        server.setSource(Robot.driveTrain.scoopCamera);
+        hatchIsForward = false;
+        if (server != null) {
+            server.setSource(Robot.driveTrain.scoopCamera);
+        }
         System.out.println("InverseArm done");
     }
     
-    public boolean getToggleInverseDrive() {
-        return toggleInverseDrive;
-    }
-
-
-
+    // public boolean gethatchIsForward() {
+    //     return hatchIsForward;
+    // }
 
 
 	public void resetEncoders() {
