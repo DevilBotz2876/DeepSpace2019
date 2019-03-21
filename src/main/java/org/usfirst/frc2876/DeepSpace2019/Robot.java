@@ -1,6 +1,8 @@
 package org.usfirst.frc2876.DeepSpace2019;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.AutonomousCommand;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffCargo;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffHatch;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Arm;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.DriveTrain;
 import org.usfirst.frc2876.DeepSpace2019.subsystems.Hatch;
@@ -63,6 +65,10 @@ public class Robot extends TimedRobot {
         // Add commands to Autonomous Sendable Chooser
 
         chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
+
+        chooser.addOption("Hatch", new CGDriveOffHatch());
+        chooser.addOption("Cargo", new CGDriveOffCargo());
+
         SmartDashboard.putData("Auto mode", chooser);
 
         hatch.setupShuffleboard();
@@ -77,7 +83,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(Scheduler.getInstance());
 
-        driverTab.setup();
+        driverTab.setup(chooser);
         // driverTab.setupSecond();
 
     }

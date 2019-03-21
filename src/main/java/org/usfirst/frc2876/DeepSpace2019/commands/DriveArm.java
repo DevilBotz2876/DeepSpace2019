@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveForward extends Command {
+public class DriveArm extends Command {
 
-    public DriveForward() {
+    public DriveArm() {
         requires(Robot.driveTrain);
     }
 

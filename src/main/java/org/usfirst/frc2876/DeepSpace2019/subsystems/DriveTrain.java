@@ -11,8 +11,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
-import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
-import org.usfirst.frc2876.DeepSpace2019.commands.DriveForward;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffCargo;
+import org.usfirst.frc2876.DeepSpace2019.commands.DriveArm;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveHatch;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveRotate;
 import org.usfirst.frc2876.DeepSpace2019.commands.DriveStop;
@@ -93,7 +93,7 @@ public class DriveTrain extends Subsystem {
     private Ramp rampArcadeRotate;
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
-    private double defaultRamp = 1;
+    private double defaultRamp = 2;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
@@ -218,9 +218,9 @@ public class DriveTrain extends Subsystem {
 
         ShuffleboardLayout commands = tab.getLayout("Commands", BuiltInLayouts.kList).withSize(7, 10)
                 .withProperties(Map.of("Label position", "HIDDEN")).withPosition(0, 0); // hide labels for commands
-        commands.add(new CGDriveOffPlatform());
+        commands.add(new CGDriveOffCargo());
         commands.add(new DriveStop());
-        commands.add(new DriveForward());
+        commands.add(new DriveArm());
         commands.add(new DriveHatch());
 
         commands.add(new DriveRotate(180.0));
@@ -403,7 +403,7 @@ public class DriveTrain extends Subsystem {
     public void setInverseArm() {
         toggleInverseDrive = false;
         server.setSource(Robot.driveTrain.scoopCamera);
-        System.out.print("Inverse done");
+        System.out.println("InverseArm done");
     }
     
     public boolean getToggleInverseDrive() {

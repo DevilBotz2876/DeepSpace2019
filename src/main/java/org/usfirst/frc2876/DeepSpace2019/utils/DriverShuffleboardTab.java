@@ -7,22 +7,18 @@
 
 package org.usfirst.frc2876.DeepSpace2019.utils;
 
-import java.util.Map;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
 import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffHatch;
-import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffPlatform;
-import org.usfirst.frc2876.DeepSpace2019.commands.HatchZeroPosition;
+import org.usfirst.frc2876.DeepSpace2019.commands.CGDriveOffCargo;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class DriverShuffleboardTab {
 
@@ -49,7 +45,7 @@ public class DriverShuffleboardTab {
         
     }
 
-    public void setup(){
+    public void setup(SendableChooser<Command> chooser){
         /////////////////////////
         // DRIVE TEAM COMMANDS //
         /////////////////////////
@@ -63,12 +59,15 @@ public class DriverShuffleboardTab {
         // Gyro
 
         // Auto Leave Platform
+
+        driveTeamTab.add("Sandstorm", chooser).withPosition(17, 10).withSize(15, 3);
+
         //I CHANGED NAME TO "Auto Leave Platform"
-        driveTeamTab.add("Auto Leave Platform", new CGDriveOffPlatform())
+        driveTeamTab.add("Auto Drive Cargo", new CGDriveOffCargo())
         .withSize(7, 3).withPosition(17, 6);
 
         driveTeamTab.add("Auto Drive Hatch", new CGDriveOffHatch())
-        .withSize(7, 3).withPosition(26, 6);
+        .withSize(7, 3).withPosition(25, 6);
 
         // Starting Position (Hatch-front or Cargo-front)
         // nteInverseDriveToggle = driveTeamTab.add("Hatch-Side Forward", Robot.driveTrain.getToggleInverseDrive()).withPosition(17, 12)
