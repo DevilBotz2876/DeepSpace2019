@@ -1,12 +1,15 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+import org.usfirst.frc2876.DeepSpace2019.utils.PixyLinePID;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PixyLine extends Command {
+  PixyLinePID pixyPID;
+
   public PixyLine() {
     requires(Robot.vision);
     requires(Robot.driveTrain);
@@ -15,17 +18,17 @@ public class PixyLine extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    // Robot.vision.lineController.setAbsoluteTolerance(10);
-    Robot.vision.update();
-    Robot.vision.lineController.reset();
-    Robot.vision.lineController.setSetpoint(35);
-    Robot.vision.lineController.enable();
+    pixyPID = Robot.vision.currentPixy();
+    pixyPID.lineController.reset();
+    pixyPID.lineController.setSetpoint(35);
+    pixyPID.lineController.enable();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double out = Robot.vision.lineController.get();
+    // double out = Robot.vision.lineController.get();
+    double out = pixyPID.lineController.get();
     double baseVelocity = 0;// Robot.driveTrain.MAX_RPM*.3;
 
     XboxController xbox = Robot.oi.getXboxController();
@@ -73,7 +76,7 @@ public class PixyLine extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.vision.lineController.disable();
+    pixyPID.lineController.disable();
   }
 
   // Called when another command which requires one or more of the same

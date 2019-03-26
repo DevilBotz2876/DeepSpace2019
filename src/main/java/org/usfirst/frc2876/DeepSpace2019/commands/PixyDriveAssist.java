@@ -1,16 +1,17 @@
 package org.usfirst.frc2876.DeepSpace2019.commands;
 
 import org.usfirst.frc2876.DeepSpace2019.Robot;
+import org.usfirst.frc2876.DeepSpace2019.utils.PixyLinePID;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 
-
 /**
  *
  */
 public class PixyDriveAssist extends Command {
+  PixyLinePID pixyPID;
 
   public PixyDriveAssist() {
 
@@ -22,9 +23,10 @@ public class PixyDriveAssist extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.vision.lineController.reset();
-    Robot.vision.lineController.setSetpoint(35);
-    Robot.vision.lineController.enable();
+    pixyPID = Robot.vision.currentPixy();
+    pixyPID.lineController.reset();
+    pixyPID.lineController.setSetpoint(35);
+    pixyPID.lineController.enable();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -41,7 +43,7 @@ public class PixyDriveAssist extends Command {
         } else if (speed <= MAX_SPEED){
           speed = -MAX_SPEED;
         }
-        double turn = -Robot.vision.lineController.get();
+        double turn = -pixyPID.lineController.get();
         Robot.vision.updateShuffleDrivetrainOutputs(speed, turn);
         Robot.driveTrain.setVelocityArcadeJoysticks(speed, turn);
       }
@@ -78,7 +80,7 @@ public class PixyDriveAssist extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.vision.lineController.disable();
+    pixyPID.lineController.disable();
   }
 
   // Called when another command which requires one or more of the same

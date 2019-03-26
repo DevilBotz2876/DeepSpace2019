@@ -7,6 +7,10 @@ public class Pixy2 {
         i2c = new Pixy2I2C(name, address);
     }
 
+    public String toString() {
+        return i2c.toString();
+    }
+
     // https://stackoverflow.com/questions/736815/2-bytes-to-short-java
     public static short bytesToShort(byte upper, byte lower) {
         // return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);

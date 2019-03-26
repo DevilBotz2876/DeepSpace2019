@@ -16,7 +16,7 @@ public class TestPixy extends Command {
   protected void initialize() {
     Pixy2Vector[] vectors;
     try {
-      vectors = Robot.vision.pixyHatch.getVectors();
+      vectors = Robot.vision.currentPixy().pixyCamera.getVectors();
     } catch (Pixy2Exception ex) {
       System.out.println(ex);
       ex.printStackTrace();
