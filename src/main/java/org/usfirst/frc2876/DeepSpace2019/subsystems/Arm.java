@@ -8,11 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmDown;
-import org.usfirst.frc2876.DeepSpace2019.commands.ArmIdle;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmPID;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmStop;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmUp;
 import org.usfirst.frc2876.DeepSpace2019.commands.ArmUpDrive;
+import org.usfirst.frc2876.DeepSpace2019.commands.ArmXbox;
 import org.usfirst.frc2876.DeepSpace2019.utils.TalonSrxEncoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -138,7 +138,8 @@ public class Arm extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        setDefaultCommand(new ArmIdle());
+        //setDefaultCommand(new ArmIdle());
+        setDefaultCommand(new ArmXbox());
     }
 
     public void setupShuffleboard() {

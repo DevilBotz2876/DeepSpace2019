@@ -92,7 +92,7 @@ public class DriveTrain extends Subsystem {
     private Ramp rampArcadeRotate;
     private Ramp rampTankLeft;
     private Ramp rampTankRight;
-    private double defaultRamp = 2;
+    private double defaultRamp = 1.5;
 
     private ShuffleboardTab tab;
     private NetworkTableEntry nteRamp;
@@ -190,7 +190,7 @@ public class DriveTrain extends Subsystem {
         turnController.setInputRange(0.0, 360.0);
         turnController.setOutputRange(-0.5, 0.5);
 
-        //initializeCameras();
+        initializeCameras();
     }
 
     @Override
