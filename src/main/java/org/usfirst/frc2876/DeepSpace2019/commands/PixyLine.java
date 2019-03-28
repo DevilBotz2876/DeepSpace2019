@@ -36,8 +36,9 @@ public class PixyLine extends Command {
     double rotate = -xbox.getX(Hand.kRight);
 
     // Only apply steering correction if we see a line and are moving forward.
+    double MAX_PIXY_ROTATE = .7;
     if (Math.abs(speed) > .1 && Robot.vision.isVectorPresent()) {
-      rotate = -out;
+      rotate = -out * MAX_PIXY_ROTATE;
     }
     // if robot is to the left of the line and coming in at sharp off angle you get
     // vector like: (32 14) (69 29) xdiff=-37 ydiff=-15
@@ -60,9 +61,13 @@ public class PixyLine extends Command {
         speed = -MAX_NO_PIXY_SPEED;
       }
     }
-    Robot.vision.updateShuffleDrivetrainOutputs(speed, rotate);
-
-    Robot.driveTrain.setVelocityArcadeJoysticks(speed, rotate);
+    if(Robot.driveTrain.isHatchForward()){
+      Robot.vision.updateShuffleDrivetrainOutputs(speed, rotate);
+      Robot.driveTrain.setVelocityArcadeJoysticks(speed, rotate);
+    } else {
+      Robot.vision.updateShuffleDrivetrainOutputs(-speed, rotate);
+      Robot.driveTrain.setVelocityArcadeJoysticks(-speed, rotate);
+    }
 
   }
 
