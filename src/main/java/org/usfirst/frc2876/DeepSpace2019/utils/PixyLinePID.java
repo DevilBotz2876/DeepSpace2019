@@ -41,16 +41,20 @@ public class PixyLinePID {
 
         prefs = Preferences.getInstance();
 
-        if (!prefs.containsKey("VisionPID_P")) {
-            prefs.putDouble("VisionPID_P", .05);
-        }
-         if (!prefs.containsKey("VisionPID_D")) {
-            prefs.putDouble("VisionPID_D", .0);
-        }
-        lineController.setP(prefs.getDouble("VisionPID_P", .05));
-        lineController.setD(prefs.getDouble("VisionPID_D", .0));
-        // lineController.setP(.1);
-        // lineController.setD(.001);
+        // Test using Preferences to get/set values. Only use this for tuning, stop
+        // using once good values found
+        //
+        // if (!prefs.containsKey("VisionPID_P")) {
+        // prefs.putDouble("VisionPID_P", .05);
+        // }
+        // if (!prefs.containsKey("VisionPID_D")) {
+        // prefs.putDouble("VisionPID_D", .0);
+        // }
+        // lineController.setP(prefs.getDouble("VisionPID_P", .05));
+        // lineController.setD(prefs.getDouble("VisionPID_D", .0));
+
+        lineController.setP(.1);
+        lineController.setD(.001);
     }
 
     public String toString() {
@@ -58,8 +62,8 @@ public class PixyLinePID {
     }
 
     public void updatePreferences() {
-        lineController.setP(prefs.getDouble("VisionPID_P", .1));
-        lineController.setD(prefs.getDouble("VisionPID_D", .0));
+        // lineController.setP(prefs.getDouble("VisionPID_P", .1));
+        // lineController.setD(prefs.getDouble("VisionPID_D", .0));
     }
 
     private class PixyOutput implements PIDOutput {
@@ -170,8 +174,8 @@ public class PixyLinePID {
     }
 
     // public void updateShuffleDrivetrainOutputs(double speed, double rotate) {
-    //     nteSpeed.setDouble(speed);
-    //     nteRotate.setDouble(rotate);
+    // nteSpeed.setDouble(speed);
+    // nteRotate.setDouble(rotate);
     // }
 
     public boolean isPixyAlive() {
@@ -182,7 +186,7 @@ public class PixyLinePID {
 
     public boolean isVectorPresent() {
         if (lineController.isEnabled()) {
-          return pixySource.isVectorPresent();
+            return pixySource.isVectorPresent();
         }
         return false;
     }
