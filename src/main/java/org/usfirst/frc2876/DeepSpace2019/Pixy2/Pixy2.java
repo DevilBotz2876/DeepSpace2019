@@ -16,6 +16,10 @@ public class Pixy2 {
         // return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);
         return (short)(((upper & 0xFF) << 8) | (lower & 0xFF));
     }
+    public static short bytesToShort(byte[] b, int pos) {
+        // return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);
+        return (short)(((b[1 + pos] & 0xFF) << 8) | (b[pos] & 0xFF));
+    }
 
     public static void printBytes(String msg, byte[] b) {
         System.out.print(msg + ": ");
